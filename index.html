@@ -67,7 +67,8 @@
           .attr("cx", d => xScale(+d['Real interest rate (%)']))
           .attr("cy", d => yScale(+d['Inflation, consumer prices (annual %)']))
           .attr("r", 5)
-          .attr("fill", "steelblue");
+          .attr("fill", "steelblue")
+          .attr("title", d => d['country']);
 
         const labels = svg.selectAll("text")
           .data(filteredData)
