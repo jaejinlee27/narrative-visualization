@@ -152,7 +152,9 @@
         else if (sceneCounter === 2) {
           const filteredData = data.filter(d => d.year === selectedYear);
           const countries = Array.from(new Set(filteredData.map(d => d.country)));
-          d3.select("#country-select")
+          const countrySelect = d3.select("#country-select");
+          countrySelect.selectAll("option").remove();
+          const countryOptions = countrySelect
             .selectAll("option")
             .data(countries)
             .enter()
@@ -161,8 +163,12 @@
             .text(d => d);
 
           const defaultCountry = countries[0];
-          d3.select("#country-select").property("value", defaultCountry);
+          countrySelect.property("value", defaultCountry);
           updateLineGraphs(defaultCountry);
+          countrySelect.on("change", function () {
+            const selectedCountry = this.value;
+            updateLineGraphs(selectedCountry);
+          });
         }
       }
 
@@ -183,7 +189,15 @@
 
         d3.select("#scene2-container").style("display", "block");
 
+        // Remove previous options from the country dropdown
         d3.select("#country-select").selectAll("option").remove();
+
+        // Set the scene counter to 2
+        sceneCounter = 2;
+
+        // Call the updateGraph function with the default selected year to update Scene 2
+        const selectedYear = d3.select("#year-select").property("value");
+        updateGraph(selectedYear);
       }
 
       function updateLineGraphs(selectedCountry) {
