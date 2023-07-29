@@ -60,6 +60,10 @@
           .domain(d3.extent(filteredData, d => +d['Inflation, consumer prices (annual %)']))
           .range([height, 0]);
 
+        const colorScale = d3.scaleOrdinal()
+          .domain(['High income', 'Upper middle income', 'Lower middle income', 'Low income'])
+          .range(['blue', 'green', 'orange', 'red']);
+
         const circles = svg.selectAll("circle")
           .data(filteredData)
           .enter()
@@ -67,8 +71,7 @@
           .attr("cx", d => xScale(+d['Real interest rate (%)']))
           .attr("cy", d => yScale(+d['Inflation, consumer prices (annual %)']))
           .attr("r", 5)
-          .attr("fill", "lightgreen")
-          .attr("title", d => d['country']);
+          .attr("fill", d => colorScale(d.incomeLevel));
 
         const labels = svg.selectAll("text")
           .data(filteredData)
