@@ -67,7 +67,7 @@
           .attr("cx", d => xScale(+d['Real interest rate (%)']))
           .attr("cy", d => yScale(+d['Inflation, consumer prices (annual %)']))
           .attr("r", 5)
-          .attr("fill", "steelblue")
+          .attr("fill", "lightgreen")
           .attr("title", d => d['country']);
 
         const labels = svg.selectAll("text")
@@ -78,7 +78,22 @@
           .attr("y", d => yScale(+d['Inflation, consumer prices (annual %)']) + 4)
           .text(d => d['country'])
           .attr("font-size", "10px")
-          .attr("fill", "black");
+          .attr("fill", "black")
+          .style("visibility", "hidden");
+
+        //show country label
+        circles.on("mouseover", function (event, d) {
+          d3.select(this).attr("r", 8); // Increase the circle size when hovering
+          labels.filter(labelData => labelData === d) // Filter to show the corresponding label
+            .style("visibility", "visible");
+        });
+
+        // Hide country label
+        circles.on("mouseout", function (event, d) {
+          d3.select(this).attr("r", 5); // Restore the circle size when not hovering
+          labels.filter(labelData => labelData === d) // Filter to hide the corresponding label
+            .style("visibility", "hidden");
+        });
 
         const xAxis = d3.axisBottom(xScale);
         const yAxis = d3.axisLeft(yScale);
