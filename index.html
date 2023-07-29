@@ -8,60 +8,91 @@
   <script src="https://d3js.org/d3.v7.min.js"></script>
 </head>
 <body>
+  <div>
+    <label for="year-select">Select Year:</label>
+    <select id="year-select"></select>
+  </div>
   <div id="chart-container"></div>
 
   <script>
-    d3.csv("inflation-interest-unemployment.csv").then(data => {
-      const margin = { top: 50, right: 50, bottom: 50, left: 50 };
-      const width = 800 - margin.left - margin.right;
-      const height = 500 - margin.top - margin.bottom;
+    d3.csv("narrative-visualization/inflation-interest-unemployment.csv").then(data => {
+      // Extract year
+      const years = Array.from(new Set(data.map(d => d.Year)));
 
-      const svg = d3.select("#chart-container")
-        .append("svg")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
-        .append("g")
-        .attr("transform", `translate(${margin.left}, ${margin.top})`);
-
-      const xScale = d3.scaleLinear()
-        .domain(d3.extent(data, d => +d['Real interest rate (%)']))
-        .range([0, width]);
-
-      const yScale = d3.scaleLinear()
-        .domain(d3.extent(data, d => +d['Inflation, consumer prices (annual %)']))
-        .range([height, 0]);
-
-      const circles = svg.selectAll("circle")
-        .data(data)
+      // dropdown
+      d3.select("#year-select")
+        .selectAll("option")
+        .data(years)
         .enter()
-        .append("circle")
-        .attr("cx", d => xScale(+d['Real interest rate (%)']))
-        .attr("cy", d => yScale(+d['Inflation, consumer prices (annual %)']))
-        .attr("r", 5)
-        .attr("fill", "steelblue");
+        .append("option")
+        .attr("value", d => d)
+        .text(d => d);
 
-      const labels = svg.selectAll("text")
-        .data(data)
-        .enter()
-        .append("text")
-        .attr("x", d => xScale(+d['Real interest rate (%)']) + 7)
-        .attr("y", d => yScale(+d['Inflation, consumer prices (annual %)']) + 4)
-        .text(d => d['country'])
-        .attr("font-size", "10px")
-        .attr("fill", "black");
+      // Set the initial year to the first year
+      const initialYear = years[0];
 
-      svg.append("text")
-        .attr("x", width / 2)
-        .attr("y", height + 40)
-        .attr("text-anchor", "middle")
-        .text("Real Interest Rate (%)");
+      updateGraph(initialYear);
 
-      svg.append("text")
-        .attr("transform", "rotate(-90)")
-        .attr("x", 0 - height / 2)
-        .attr("y", -35)
-        .attr("text-anchor", "middle")
-        .text("Inflation Rate (Annual %)");
+      d3.select("#year-select").on("change", function() {
+        const selectedYear = this.value;
+        updateGraph(selectedYear);
+      });
+
+      function updateGraph(selectedYear) {
+        const filteredData = data.filter(d => d.Year === selectedYear);
+
+        const margin = { top: 50, right: 50, bottom: 50, left: 50 };
+        const width = 800 - margin.left - margin.right;
+        const height = 500 - margin.top - margin.bottom;
+
+        const svg = d3.select("#chart-container")
+          .html("") 
+          .append("svg")
+          .attr("width", width + margin.left + margin.right)
+          .attr("height", height + margin.top + margin.bottom)
+          .append("g")
+          .attr("transform", `translate(${margin.left}, ${margin.top})`);
+
+        const xScale = d3.scaleLinear()
+          .domain(d3.extent(filteredData, d => +d['Real interest rate (%)']))
+          .range([0, width]);
+
+        const yScale = d3.scaleLinear()
+          .domain(d3.extent(filteredData, d => +d['Inflation, consumer prices (annual %)']))
+          .range([height, 0]);
+
+        const circles = svg.selectAll("circle")
+          .data(filteredData)
+          .enter()
+          .append("circle")
+          .attr("cx", d => xScale(+d['Real interest rate (%)']))
+          .attr("cy", d => yScale(+d['Inflation, consumer prices (annual %)']))
+          .attr("r", 5)
+          .attr("fill", "steelblue");
+
+        const labels = svg.selectAll("text")
+          .data(filteredData)
+          .enter()
+          .append("text")
+          .attr("x", d => xScale(+d['Real interest rate (%)']) + 7)
+          .attr("y", d => yScale(+d['Inflation, consumer prices (annual %)']) + 4)
+          .text(d => d['country'])
+          .attr("font-size", "10px")
+          .attr("fill", "black");
+
+        svg.append("text")
+          .attr("x", width / 2)
+          .attr("y", height + 40)
+          .attr("text-anchor", "middle")
+          .text("Real Interest Rate (%)");
+
+        svg.append("text")
+          .attr("transform", "rotate(-90)")
+          .attr("x", 0 - height / 2)
+          .attr("y", -35)
+          .attr("text-anchor", "middle")
+          .text("Inflation Rate (Annual %)");
+      }
     });
   </script>
 </body>
