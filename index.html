@@ -185,25 +185,38 @@
         d3.select("#scene2-container").style("display", "none");
 
         d3.select("#year-select").property("value", defaultYear);
+        d3.select("#scene2-container").insert("label", ":first-child")
+          .attr("for", "year-select")
+          .text("Select Year:");
       }
 
       function showScene2() {
         d3.select("#chart-container").style("display", "none");
         d3.select("#year-select").style("display", "none");
         d3.select("#next-button").style("display", "none");
-        d3.select("#previous-button").style("display", "block");
 
         d3.select("#scene2-container").style("display", "block");
 
         d3.select("#country-select").selectAll("option").remove();
-
         sceneCounter = 2;
-
         const selectedYear = d3.select("#year-select").property("value");
         updateGraph(selectedYear);
+        
+        d3.select("#scene2-container").select("label").remove();
+
+        d3.select("#scene2-container").append("button")
+          .attr("id", "previous-button")
+          .text("Previous")
+          .on("click", function() {
+            if (sceneCounter === 2) {
+              sceneCounter = 1;
+              showScene1();
+            }
+          });
       }
 
       function updateLineGraphs(selectedCountry) {
+        d3.selectAll("#interest-rate-chart svg, #inflation-rate-chart svg").remove();
         const filteredData = data.filter(d => d.country === selectedCountry);
 
         const years = filteredData.map(d => d.year);
