@@ -19,11 +19,18 @@
     <button id="next-button">Next</button>
   </div>
   <div id="scene2-container" style="display: none;">
-    <label for="country-select">Select Country:</label>
-    <select id="country-select"></select>
+    <div>
+      <label for="country-select-1">Select Country:</label>
+      <select id="country-select-1"></select>
+      <div id="interest-rate-chart-1"></div>
+      <div id="inflation-rate-chart-1"></div>
+    </div>
 
-    <div id="interest-rate-chart"></div>
-    <div id="inflation-rate-chart"></div>
+    <div>
+      <label for="country-select-2">Country: United States</label>
+      <div id="interest-rate-chart-2"></div>
+      <div id="inflation-rate-chart-2"></div>
+    </div>
   </div>
   
   <script>
@@ -194,26 +201,22 @@
         d3.select("#chart-container").style("display", "none");
         d3.select("#year-select").style("display", "none");
         d3.select("#next-button").style("display", "none");
+        d3.select("#previous-button").style("display", "block");
+
         d3.select("#scene2-container").style("display", "block");
 
-        d3.select("#country-select").selectAll("option").remove();
-        d3.select("#previous-button").remove();
+        d3.select("#country-select-1").selectAll("option").remove();
+        d3.select("#country-select-2").selectAll("option").remove();
 
         sceneCounter = 2;
-        const selectedYear = d3.select("#year-select").property("value");
-        updateGraph(selectedYear);
-        
-        d3.select("#scene2-container").select("label").remove();
 
-        d3.select("#scene2-container").append("button")
-          .attr("id", "previous-button")
-          .text("Previous")
-          .on("click", function() {
-            if (sceneCounter === 2) {
-              sceneCounter = 1;
-              showScene1();
-            }
-          });
+        const selectedYear = d3.select("#year-select").property("value");
+
+        const defaultCountry1 = "Uganda";
+        updateLineGraphs(defaultCountry1, "1");
+
+        const defaultCountry2 = "United States";
+        updateLineGraphs(defaultCountry2, "2");
       }
 
       function updateLineGraphs(selectedCountry) {
@@ -228,14 +231,14 @@
         const width = 400 - margin.left - margin.right;
         const height = 300 - margin.top - margin.bottom;
 
-        const interestRateSvg = d3.select("#interest-rate-chart")
+        const interestRateSvg = d3.select(`#interest-rate-chart-${setNumber}`)
           .append("svg")
           .attr("width", width + margin.left + margin.right)
           .attr("height", height + margin.top + margin.bottom)
           .append("g")
           .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
-        const inflationRateSvg = d3.select("#inflation-rate-chart")
+        const inflationRateSvg = d3.select(`#inflation-rate-chart-${setNumber}`)
           .append("svg")
           .attr("width", width + margin.left + margin.right)
           .attr("height", height + margin.top + margin.bottom)
@@ -268,7 +271,7 @@
         interestRateSvg.append("path")
           .datum(interestRates)
           .attr("fill", "none")
-          .attr("stroke", "steelblue")
+          .attr("stroke", "blue")
           .attr("stroke-width", 2)
           .attr("d", interestRateLine);
 
