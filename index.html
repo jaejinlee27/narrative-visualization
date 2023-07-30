@@ -219,8 +219,9 @@
         updateLineGraphs(defaultCountry2, "2");
       }
 
-      function updateLineGraphs(selectedCountry) {
-        d3.selectAll("#interest-rate-chart svg, #inflation-rate-chart svg").remove();
+      function updateLineGraphs(selectedCountry, setNumber) {
+        d3.select(`#interest-rate-chart-${setNumber}`).selectAll("svg").remove();
+        d3.select(`#inflation-rate-chart-${setNumber}`).selectAll("svg").remove();
         const filteredData = data.filter(d => d.country === selectedCountry);
 
         const years = filteredData.map(d => d.year);
