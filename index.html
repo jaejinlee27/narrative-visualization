@@ -195,7 +195,8 @@
         d3.select("#year-select").style("display", "none");
         d3.select("#next-button").style("display", "none");
         d3.select("#scene2-container").style("display", "block");
-
+        d3.select("#interest-rate-chart").style("display", "block");
+        d3.select("#inflation-rate-chart").style("display", "block");
         d3.select("#country-select").selectAll("option").remove();
         d3.select("#previous-button").remove();
 
@@ -212,10 +213,9 @@
           .attr("value", d => d)
           .text(d => d);
 
+        const defaultCountry = "Uganda";
         countrySelect.property("value", defaultCountry);
-
         updateLineGraphs(defaultCountry);
-
         countrySelect.on("change", function () {
           const selectedCountry = this.value;
           updateLineGraphs(selectedCountry);
@@ -232,6 +232,7 @@
             }
           });
       }
+
 
 
       function updateLineGraphs(selectedCountry) {
