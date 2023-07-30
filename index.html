@@ -320,10 +320,12 @@
           .attr("text-anchor", "middle")
           .text("Inflation Rate vs. Year");
 
-        interestRateSvg.selectAll("circle")
-          .data(filteredData)
-          .enter()
+        const interestCircles = interestRateSvg.selectAll("circle")
+          .data(filteredData);
+
+        interestCircles.enter()
           .append("circle")
+          .merge(interestCircles)
           .attr("cx", d => xScale(d.year) + xScale.bandwidth() / 2)
           .attr("cy", d => yScale(+d['Real interest rate (%)']))
           .attr("r", 5)
@@ -342,10 +344,14 @@
               .style("opacity", 0);
           });
 
-        inflationRateSvg.selectAll("circle")
-          .data(filteredData)
-          .enter()
+        interestCircles.exit().remove();
+
+        const inflationCircles = inflationRateSvg.selectAll("circle")
+          .data(filteredData);
+
+        inflationCircles.enter()
           .append("circle")
+          .merge(inflationCircles)
           .attr("cx", d => xScale(d.year) + xScale.bandwidth() / 2)
           .attr("cy", d => yScale(+d['Inflation, consumer prices (annual %)']))
           .attr("r", 5)
@@ -363,6 +369,8 @@
               .duration(500)
               .style("opacity", 0);
           });
+
+        inflationCircles.exit().remove();
       }
     });
   </script>
