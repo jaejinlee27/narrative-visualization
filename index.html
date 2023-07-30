@@ -18,15 +18,17 @@
     <button id="previous-button" style="display: none;">Previous</button>
     <button id="next-button">Next</button>
   </div>
-  <div id="scene2-container" style="display: none;">
-    <label for="country-select">Select Country:</label>
-    <select id="country-select"></select>
 
-    <div id="interest-rate-chart"></div>
+  <div id="scene2-container" style="display: none;">
     <div id="inflation-rate-chart"></div>
+  </div>
+
+  <div id="scene3-container" style="display: none;">
+    <div id="interest-rate-chart"></div>
   </div>
   
   <script>
+
     let sceneCounter = 1;
     d3.csv("inflation-interest-unemployment.csv").then(data => {
       const years = Array.from(new Set(data.map(d => d.year)));
@@ -54,6 +56,9 @@
         if (sceneCounter === 1) {
           sceneCounter = 2;
           showScene2();
+        } else if (sceneCounter === 2) {
+          sceneCounter = 3;
+          showScene3();
         }
       });
 
@@ -61,8 +66,12 @@
         if (sceneCounter === 2) {
           sceneCounter = 1;
           showScene1();
+        } else if (sceneCounter === 3) {
+          sceneCounter = 2;
+          showScene2();
         }
       });
+
 
       function updateGraph(selectedYear) {
         if(sceneCounter === 1){
@@ -150,6 +159,7 @@
             .text("Inflation Rate (Annual %)");
         }
         else if (sceneCounter === 2) {
+          // Code for Scene 2
           const filteredData = data.filter(d => d.year === selectedYear);
           const countries = Array.from(new Set(filteredData.map(d => d.country)));
           const countrySelect = d3.select("#country-select");
@@ -168,12 +178,29 @@
           const defaultCountry = "United States";
           countrySelect.property("value", defaultCountry);
 
-          updateLineGraphs(defaultCountry);
+          updateLineGraphs(selectedYear, filteredData, "Inflation Rate vs. Year", "green");
+        }
+        else if (sceneCounter === 3) {
+          // Code for Scene 3
+          const filteredData = data.filter(d => d.year === selectedYear);
+          const countries = Array.from(new Set(filteredData.map(d => d.country)));
+          const countrySelect = d3.select("#country-select");
 
-          countrySelect.on("change", function () {
-            const selectedCountry = this.value;
-            updateLineGraphs(selectedCountry);
-          });
+          countrySelect.selectAll("option").remove();
+
+          //options for the country dropdown
+          const countryOptions = countrySelect
+            .selectAll("option")
+            .data(countries)
+            .enter()
+            .append("option")
+            .attr("value", d => d)
+            .text(d => d);
+
+          const defaultCountry = "United States";
+          countrySelect.property("value", defaultCountry);
+
+          updateLineGraphs(selectedYear, filteredData, "Interest Rate vs. Year", "steelblue");
         }
       }
 
@@ -195,6 +222,7 @@
         d3.select("#year-select").style("display", "none");
         d3.select("#next-button").style("display", "none");
         d3.select("#scene2-container").style("display", "block");
+        d3.select("#scene3-container").style("display", "none");
 
         d3.select("#country-select").selectAll("option").remove();
         d3.select("#previous-button").remove();
@@ -202,40 +230,34 @@
         sceneCounter = 2;
         const selectedYear = d3.select("#year-select").property("value");
         updateGraph(selectedYear);
-        
-        d3.select("#scene2-container").select("label").remove();
-
-        d3.select("#scene2-container").append("button")
-          .attr("id", "previous-button")
-          .text("Previous")
-          .on("click", function() {
-            if (sceneCounter === 2) {
-              sceneCounter = 1;
-              showScene1();
-            }
-          });
       }
 
-      function updateLineGraphs(selectedCountry) {
-        d3.selectAll("#interest-rate-chart svg, #inflation-rate-chart svg").remove();
-        const filteredData = data.filter(d => d.country === selectedCountry);
+      function showScene3() {
+        d3.select("#chart-container").style("display", "none");
+        d3.select("#year-select").style("display", "none");
+        d3.select("#next-button").style("display", "none");
+        d3.select("#scene2-container").style("display", "none");
+        d3.select("#scene3-container").style("display", "block");
 
+        d3.select("#country-select").selectAll("option").remove();
+        d3.select("#previous-button").remove();
+
+        sceneCounter = 3;
+        const selectedYear = d3.select("#year-select").property("value");
+        updateGraph(selectedYear);
+      }
+
+      function updateLineGraphs(selectedYear, filteredData, chartTitle, lineColor) {
+        d3.selectAll("#interest-rate-chart svg, #inflation-rate-chart svg").remove();
         const years = filteredData.map(d => d.year);
         const interestRates = filteredData.map(d => +d['Real interest rate (%)']);
-        const inflationRates = filteredData.map(d => +d['Inflation, consumer prices (annual %)']);
+        const values = filteredData.map(d => +d['Inflation, consumer prices (annual %)']);
 
         const margin = { top: 50, right: 50, bottom: 50, left: 50 };
         const width = 400 - margin.left - margin.right;
         const height = 300 - margin.top - margin.bottom;
 
-        const interestRateSvg = d3.select("#interest-rate-chart")
-          .append("svg")
-          .attr("width", width + margin.left + margin.right)
-          .attr("height", height + margin.top + margin.bottom)
-          .append("g")
-          .attr("transform", `translate(${margin.left}, ${margin.top})`);
-
-        const inflationRateSvg = d3.select("#inflation-rate-chart")
+        const svg = d3.select(`#${chartTitle.toLowerCase().replace(/\s+/g, '-')}-chart`)
           .append("svg")
           .attr("width", width + margin.left + margin.right)
           .attr("height", height + margin.top + margin.bottom)
@@ -248,15 +270,10 @@
           .padding(0.1);
 
         const yScale = d3.scaleLinear()
-          .domain([0, d3.max(interestRates, d => Math.max(d, d3.max(inflationRates)))])
+          .domain([0, d3.max(values)])
           .range([height, 0]);
 
-        const interestRateLine = d3.line()
-          .x((d, i) => xScale(years[i]) + xScale.bandwidth() / 2)
-          .y(d => yScale(d))
-          .curve(d3.curveMonotoneX);
-
-        const inflationRateLine = d3.line()
+        const line = d3.line()
           .x((d, i) => xScale(years[i]) + xScale.bandwidth() / 2)
           .y(d => yScale(d))
           .curve(d3.curveMonotoneX);
@@ -265,21 +282,16 @@
           .tickValues(xScale.domain().filter((d, i) => i % 5 === 0))
           .tickFormat(d3.format("d"));
 
-        interestRateSvg.append("path")
-          .datum(interestRates)
-          .attr("fill", "none")
-          .attr("stroke", "steelblue")
-          .attr("stroke-width", 2)
-          .attr("d", interestRateLine);
+        const yAxis = d3.axisLeft(yScale);
 
-        inflationRateSvg.append("path")
-          .datum(inflationRates)
+        svg.append("path")
+          .datum(values)
           .attr("fill", "none")
-          .attr("stroke", "green")
+          .attr("stroke", lineColor)
           .attr("stroke-width", 2)
-          .attr("d", inflationRateLine);
+          .attr("d", line);
 
-        interestRateSvg.append("g")
+        svg.append("g")
           .attr("transform", `translate(0, ${height})`)
           .call(xAxis)
           .selectAll("text")
@@ -289,33 +301,14 @@
           .attr("transform", "rotate(-45)")
           .style("text-anchor", "end");
 
-        inflationRateSvg.append("g")
-          .attr("transform", `translate(0, ${height})`)
-          .call(xAxis)
-          .selectAll("text")
-          .attr("y", 10)
-          .attr("x", -5)
-          .attr("dy", ".35em")
-          .attr("transform", "rotate(-45)")
-          .style("text-anchor", "end");
+        svg.append("g")
+          .call(yAxis);
 
-        interestRateSvg.append("g")
-          .call(d3.axisLeft(yScale));
-
-        inflationRateSvg.append("g")
-          .call(d3.axisLeft(yScale));
-
-        interestRateSvg.append("text")
+        svg.append("text")
           .attr("x", width / 2)
           .attr("y", -10)
           .attr("text-anchor", "middle")
-          .text("Interest Rate vs. Year");
-
-        inflationRateSvg.append("text")
-          .attr("x", width / 2)
-          .attr("y", -10)
-          .attr("text-anchor", "middle")
-          .text("Inflation Rate vs. Year");
+          .text(chartTitle);
       }
     });
   </script>
