@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Narrative Visualization - Scene 1</title>
+  <!-- Include D3.js library -->
   <script src="https://d3js.org/d3.v7.min.js"></script>
 </head>
 <body>
@@ -18,21 +19,24 @@
     <button id="next-button">Next</button>
   </div>
   <div id="scene2-container" style="display: none;">
-    <label for="country-select">Select Country:</label>
-    <select id="country-select"></select>
-
-    <div id="interest-rate-chart"></div>
-    <div id="inflation-rate-chart"></div>
+    <!-- Scene 2 content goes here -->
+    <h2>Scene 2: Exploring Trends Over Time</h2>
+    <div>
+      <label for="scene2-year-select">Select Year:</label>
+      <select id="scene2-year-select"></select>
+    </div>
+    <div id="scene2-chart-container"></div>
+    <div id="high-income-charts">
+      <label for="high-income-country-select">Select High Income Country:</label>
+      <select id="high-income-country-select"></select>
+      <div id="high-income-interest-rate-chart"></div>
+      <div id="high-income-inflation-rate-chart"></div>
+    </div>
+    <div>
+      <button id="scene2-previous-button">Previous</button>
+      <button id="scene2-next-button">Next</button>
+    </div>
   </div>
-
-  <div id="scene3-container" style="display: none;">
-    <label for="income-level-select">Select Income Level:</label>
-    <select id="income-level-select"></select>
-
-    <div id="interest-rate-chart2"></div>
-    <div id="inflation-rate-chart2"></div>
-  </div>
-
   
   <script>
     let sceneCounter = 1;
@@ -63,20 +67,12 @@
           sceneCounter = 2;
           showScene2();
         }
-        else if (sceneCounter === 2) {
-          sceneCounter = 3;
-          showScene3();
-        }
       });
 
       d3.select("#previous-button").on("click", function() {
         if (sceneCounter === 2) {
           sceneCounter = 1;
           showScene1();
-        }
-        else if (sceneCounter === 3) {
-          sceneCounter = 2;
-          showScene2();
         }
       });
 
@@ -181,7 +177,7 @@
             .attr("value", d => d)
             .text(d => d);
 
-          const defaultCountry = "Kenya";
+          const defaultCountry = "Uganda";
           countrySelect.property("value", defaultCountry);
 
           updateLineGraphs(defaultCountry);
@@ -229,7 +225,7 @@
           .attr("value", d => d)
           .text(d => d);
 
-        const defaultCountry = "Kenya";
+        const defaultCountry = "Uganda";
         countrySelect.property("value", defaultCountry);
         updateLineGraphs(defaultCountry);
         countrySelect.on("change", function () {
@@ -241,7 +237,7 @@
         d3.select("#scene2-container").append("button")
           .attr("id", "previous-button")
           .text("Previous")
-          .on("click", function () {
+          .on("click", function() {
             if (sceneCounter === 2) {
               sceneCounter = 1;
               showScene1();
@@ -249,64 +245,19 @@
           });
       }
 
-      function showScene3() {
-        d3.select("#chart-container").style("display", "none");
-        d3.select("#year-select").style("display", "none");
-        d3.select("#next-button").style("display", "none");
-        d3.select("#scene3-container").style("display", "block");
-        d3.select("#interest-rate-chart").style("display", "block");
-        d3.select("#inflation-rate-chart").style("display", "block");
-        d3.select("#country-select").selectAll("option").remove();
-        d3.select("#previous-button").remove();
-
-        sceneCounter = 3;
-        const filteredData = data.filter(d => d.year === defaultYear);
-        const countries = filteredData.filter(d => d.incomeLevel === "High income").map(d => d.country);
-        const countrySelect = d3.select("#country-select");
-        countrySelect.selectAll("option").remove();
-        const countryOptions = countrySelect
-          .selectAll("option")
-          .data(countries)
-          .enter()
-          .append("option")
-          .attr("value", d => d)
-          .text(d => d);
-
-        const defaultCountry = "United States";
-        countrySelect.property("value", defaultCountry);
-        updateLineGraphs2(defaultCountry);
-        countrySelect.on("change", function () {
-          const selectedCountry = this.value;
-          updateLineGraphs2(selectedCountry);
-        });
-
-        d3.select("#scene2-container").insert("label", ":first-child")
-          .attr("for", "country-select")
-          .text("Select Country:");
-
-        d3.select("#scene2-container").append("button")
-          .attr("id", "previous-button")
-          .text("Previous")
-          .on("click", function () {
-            if (sceneCounter === 3) {
-              sceneCounter = 2;
-              showScene2();
-            }
-          });
-      }
 
       function updateLineGraphs(selectedCountry) {
-        const filteredData = data.filter(d => d.year === selectedYear);
+        d3.selectAll("#interest-rate-chart svg, #inflation-rate-chart svg, #high-income-interest-rate-chart svg, #high-income-inflation-rate-chart svg").remove();
 
-        if (sceneCounter === 2) {
-          filteredData = filteredData.filter(d => d.incomeLevel === "Low income" || d.incomeLevel === "Lower middle income");
-        } else if (sceneCounter === 3) {
-          filteredData = filteredData.filter(d => d.incomeLevel === "High income");
-        }
-
+        const filteredData = data.filter(d => d.country === selectedCountry);
         const years = filteredData.map(d => d.year);
         const interestRates = filteredData.map(d => +d['Real interest rate (%)']);
         const inflationRates = filteredData.map(d => +d['Inflation, consumer prices (annual %)']);
+
+        const highIncomeFilteredData = data.filter(d => d.country === selectedCountry && d.incomeLevel === "High income");
+        const highIncomeYears = highIncomeFilteredData.map(d => d.year);
+        const highIncomeInterestRates = highIncomeFilteredData.map(d => +d['Real interest rate (%)']);
+        const highIncomeInflationRates = highIncomeFilteredData.map(d => +d['Inflation, consumer prices (annual %)']);
 
         const margin = { top: 50, right: 50, bottom: 50, left: 50 };
         const width = 400 - margin.left - margin.right;
@@ -326,6 +277,20 @@
           .append("g")
           .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
+        const highIncomeInterestRateSvg = d3.select("#high-income-interest-rate-chart")
+          .append("svg")
+          .attr("width", width + margin.left + margin.right)
+          .attr("height", height + margin.top + margin.bottom)
+          .append("g")
+          .attr("transform", `translate(${margin.left}, ${margin.top})`);
+
+        const highIncomeInflationRateSvg = d3.select("#high-income-inflation-rate-chart")
+          .append("svg")
+          .attr("width", width + margin.left + margin.right)
+          .attr("height", height + margin.top + margin.bottom)
+          .append("g")
+          .attr("transform", `translate(${margin.left}, ${margin.top})`);
+
         const xScale = d3.scaleBand()
           .domain(years)
           .range([0, width])
@@ -333,6 +298,10 @@
 
         const yScale = d3.scaleLinear()
           .domain([0, d3.max(interestRates, d => Math.max(d, d3.max(inflationRates)))])
+          .range([height, 0]);
+
+        const highIncomeYScale = d3.scaleLinear()
+          .domain([0, d3.max(highIncomeInterestRates, d => Math.max(d, d3.max(highIncomeInflationRates)))])
           .range([height, 0]);
 
         const interestRateLine = d3.line()
@@ -343,6 +312,16 @@
         const inflationRateLine = d3.line()
           .x((d, i) => xScale(years[i]) + xScale.bandwidth() / 2)
           .y(d => yScale(d))
+          .curve(d3.curveMonotoneX);
+
+        const highIncomeInterestRateLine = d3.line()
+          .x((d, i) => xScale(highIncomeYears[i]) + xScale.bandwidth() / 2)
+          .y(d => highIncomeYScale(d))
+          .curve(d3.curveMonotoneX);
+
+        const highIncomeInflationRateLine = d3.line()
+          .x((d, i) => xScale(highIncomeYears[i]) + xScale.bandwidth() / 2)
+          .y(d => highIncomeYScale(d))
           .curve(d3.curveMonotoneX);
 
         const xAxis = d3.axisBottom(xScale)
@@ -363,6 +342,20 @@
           .attr("stroke-width", 2)
           .attr("d", inflationRateLine);
 
+        highIncomeInterestRateSvg.append("path")
+          .datum(highIncomeInterestRates)
+          .attr("fill", "none")
+          .attr("stroke", "red")
+          .attr("stroke-width", 2)
+          .attr("d", highIncomeInterestRateLine);
+
+        highIncomeInflationRateSvg.append("path")
+          .datum(highIncomeInflationRates)
+          .attr("fill", "none")
+          .attr("stroke", "orange")
+          .attr("stroke-width", 2)
+          .attr("d", highIncomeInflationRateLine);
+
         interestRateSvg.append("g")
           .attr("transform", `translate(0, ${height})`)
           .call(xAxis)
@@ -383,11 +376,37 @@
           .attr("transform", "rotate(-45)")
           .style("text-anchor", "end");
 
+        highIncomeInterestRateSvg.append("g")
+          .attr("transform", `translate(0, ${height})`)
+          .call(xAxis)
+          .selectAll("text")
+          .attr("y", 10)
+          .attr("x", -5)
+          .attr("dy", ".35em")
+          .attr("transform", "rotate(-45)")
+          .style("text-anchor", "end");
+
+        highIncomeInflationRateSvg.append("g")
+          .attr("transform", `translate(0, ${height})`)
+          .call(xAxis)
+          .selectAll("text")
+          .attr("y", 10)
+          .attr("x", -5)
+          .attr("dy", ".35em")
+          .attr("transform", "rotate(-45)")
+          .style("text-anchor", "end");
+
         interestRateSvg.append("g")
           .call(d3.axisLeft(yScale));
 
         inflationRateSvg.append("g")
           .call(d3.axisLeft(yScale));
+
+        highIncomeInterestRateSvg.append("g")
+          .call(d3.axisLeft(highIncomeYScale));
+
+        highIncomeInflationRateSvg.append("g")
+          .call(d3.axisLeft(highIncomeYScale));
 
         interestRateSvg.append("text")
           .attr("x", width / 2)
@@ -400,7 +419,20 @@
           .attr("y", -10)
           .attr("text-anchor", "middle")
           .text("Inflation Rate vs. Year");
+
+        highIncomeInterestRateSvg.append("text")
+          .attr("x", width / 2)
+          .attr("y", -10)
+          .attr("text-anchor", "middle")
+          .text("Interest Rate vs. Year (High Income)");
+
+        highIncomeInflationRateSvg.append("text")
+          .attr("x", width / 2)
+          .attr("y", -10)
+          .attr("text-anchor", "middle")
+          .text("Inflation Rate vs. Year (High Income)");
       }
+
     });
   </script>
 </body>
