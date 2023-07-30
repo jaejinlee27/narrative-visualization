@@ -19,30 +19,15 @@
     <button id="next-button">Next</button>
   </div>
   <div id="scene2-container" style="display: none;">
-    <div>
-      <label for="country-select-1">Select Country (Set 1):</label>
-      <select id="country-select-1"></select>
-    </div>
-    <div id="graph-container-1" style="display: inline-block; vertical-align: top;">
-      <div id="interest-rate-chart-1"></div>
-      <div id="inflation-rate-chart-1"></div>
-    </div>
-    <div>
-      <label for="country-select-2">Select Country (Set 2):</label>
-      <select id="country-select-2"></select>
-    </div>
-    <div id="graph-container-2" style="display: inline-block; vertical-align: top;">
-      <div id="interest-rate-chart-2"></div>
-      <div id="inflation-rate-chart-2"></div>
-    </div>
-    <div>
-      <button id="previous-button">Previous</button>
-    </div>
+    <label for="country-select">Select Country:</label>
+    <select id="country-select"></select>
+
+    <div id="interest-rate-chart"></div>
+    <div id="inflation-rate-chart"></div>
   </div>
   
   <script>
     let sceneCounter = 1;
-    let filteredData = [];
     d3.csv("inflation-interest-unemployment.csv").then(data => {
       const years = Array.from(new Set(data.map(d => d.year)));
 
@@ -167,7 +152,7 @@
         else if (sceneCounter === 2) {
           const filteredData = data.filter(d => d.year === selectedYear);
           const countries = Array.from(new Set(filteredData.map(d => d.country)));
-          const countrySelect = d3.select("#country-select-1");
+          const countrySelect = d3.select("#country-select");
 
           countrySelect.selectAll("option").remove();
 
@@ -193,7 +178,6 @@
       }
 
       function showScene1() {
-        d3.select("#previous-button").style("display", "none");
         d3.select("#chart-container").style("display", "block");
         d3.select("#year-select").style("display", "block");
         d3.select("#next-button").style("display", "block");
@@ -210,67 +194,31 @@
         d3.select("#chart-container").style("display", "none");
         d3.select("#year-select").style("display", "none");
         d3.select("#next-button").style("display", "none");
-        d3.select("#previous-button").style("display", "block");
-
         d3.select("#scene2-container").style("display", "block");
 
-        d3.select("#country-select-1").selectAll("option").remove();
-        d3.select("#country-select-2").selectAll("option").remove();
+        d3.select("#country-select").selectAll("option").remove();
+        d3.select("#previous-button").remove();
 
         sceneCounter = 2;
-
         const selectedYear = d3.select("#year-select").property("value");
+        updateGraph(selectedYear);
+        
+        d3.select("#scene2-container").select("label").remove();
 
-        const defaultCountry1 = "Uganda";
-        const filteredData1 = updateData(defaultCountry1);
-        updateLineGraphs(filteredData1, "1");
-
-        const defaultCountry2 = "United States";
-        const filteredData2 = updateData(defaultCountry2);
-        updateLineGraphs(filteredData2, "2");
-
-        const countries1 = Array.from(new Set(filteredData1.map(d => d.country)));
-        const countrySelect1 = d3.select("#country-select-1");
-        countrySelect1
-          .selectAll("option")
-          .data(countries1)
-          .enter()
-          .append("option")
-          .attr("value", d => d)
-          .text(d => d);
-
-        countrySelect1.property("value", defaultCountry1);
-
-        const countries2 = Array.from(new Set(filteredData2.map(d => d.country)));
-        const countrySelect2 = d3.select("#country-select-2");
-        countrySelect2
-          .selectAll("option")
-          .data(countries2)
-          .enter()
-          .append("option")
-          .attr("value", d => d)
-          .text(d => d);
-
-        countrySelect2.property("value", defaultCountry2);
-
-        countrySelect1.on("change", function () {
-          const selectedCountry = this.value;
-          updateLineGraphs(updateData(selectedCountry), "1");
-        });
-
-        countrySelect2.on("change", function () {
-          const selectedCountry = this.value;
-          updateLineGraphs(updateData(selectedCountry), "2");
-        });
+        d3.select("#scene2-container").append("button")
+          .attr("id", "previous-button")
+          .text("Previous")
+          .on("click", function() {
+            if (sceneCounter === 2) {
+              sceneCounter = 1;
+              showScene1();
+            }
+          });
       }
 
-      function updateData(selectedCountry) {
-        return data.filter(d => d.country === selectedCountry);
-      }
-
-      function updateLineGraphs(selectedCountry, setNumber) {
-        d3.select(`#interest-rate-chart-${setNumber}`).selectAll("svg").remove();
-        d3.select(`#inflation-rate-chart-${setNumber}`).selectAll("svg").remove();
+      function updateLineGraphs(selectedCountry) {
+        d3.selectAll("#interest-rate-chart svg, #inflation-rate-chart svg").remove();
+        const filteredData = data.filter(d => d.country === selectedCountry);
 
         const years = filteredData.map(d => d.year);
         const interestRates = filteredData.map(d => +d['Real interest rate (%)']);
@@ -280,14 +228,14 @@
         const width = 400 - margin.left - margin.right;
         const height = 300 - margin.top - margin.bottom;
 
-        const interestRateSvg = d3.select(`#interest-rate-chart-${setNumber}`)
+        const interestRateSvg = d3.select("#interest-rate-chart")
           .append("svg")
           .attr("width", width + margin.left + margin.right)
           .attr("height", height + margin.top + margin.bottom)
           .append("g")
           .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
-        const inflationRateSvg = d3.select(`#inflation-rate-chart-${setNumber}`)
+        const inflationRateSvg = d3.select("#inflation-rate-chart")
           .append("svg")
           .attr("width", width + margin.left + margin.right)
           .attr("height", height + margin.top + margin.bottom)
@@ -320,7 +268,7 @@
         interestRateSvg.append("path")
           .datum(interestRates)
           .attr("fill", "none")
-          .attr("stroke", "blue")
+          .attr("stroke", "steelblue")
           .attr("stroke-width", 2)
           .attr("d", interestRateLine);
 
