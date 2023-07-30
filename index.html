@@ -165,7 +165,7 @@
             .attr("value", d => d)
             .text(d => d);
 
-          const defaultCountry = "Kenya";
+          const defaultCountry = "Uganda";
           countrySelect.property("value", defaultCountry);
 
           updateLineGraphs(defaultCountry);
@@ -197,23 +197,8 @@
         d3.select("#scene2-container").style("display", "block");
         d3.select("#interest-rate-chart").style("display", "block");
         d3.select("#inflation-rate-chart").style("display", "block");
-
-        d3.select("#scene2-container").select("label").remove();
-
-        d3.select("#scene2-container")
-          .insert("button", ":first-child")
-          .attr("id", "previous-button")
-          .text("Previous")
-          .on("click", function() {
-            if (sceneCounter === 2) {
-              sceneCounter = 1;
-              showScene1();
-            }
-          });
-
-        d3.select("#scene2-container").select("label")
-          .attr("for", "country-select")
-          .text("Select Country:");
+        d3.select("#country-select").selectAll("option").remove();
+        d3.select("#previous-button").remove();
 
         sceneCounter = 2;
         const filteredData = data.filter(d => d.year === defaultYear);
@@ -228,14 +213,27 @@
           .attr("value", d => d)
           .text(d => d);
 
-        const defaultCountry = "Kenya";
+        const defaultCountry = "Uganda";
         countrySelect.property("value", defaultCountry);
         updateLineGraphs(defaultCountry);
         countrySelect.on("change", function () {
           const selectedCountry = this.value;
           updateLineGraphs(selectedCountry);
         });
+
+        d3.select("#scene2-container").select("label").remove();
+        d3.select("#scene2-container").append("button")
+          .attr("id", "previous-button")
+          .text("Previous")
+          .on("click", function() {
+            if (sceneCounter === 2) {
+              sceneCounter = 1;
+              showScene1();
+            }
+          });
       }
+
+
 
       function updateLineGraphs(selectedCountry) {
         d3.selectAll("#interest-rate-chart svg, #inflation-rate-chart svg").remove();
