@@ -229,7 +229,7 @@
 
         sceneCounter = 2;
         const selectedYear = d3.select("#year-select").property("value");
-        updateGraph(selectedYear);
+        updateLineGraphs(selectedYear, filteredData, "Inflation Rate vs. Year", "green");
       }
 
       function showScene3() {
@@ -244,7 +244,7 @@
 
         sceneCounter = 3;
         const selectedYear = d3.select("#year-select").property("value");
-        updateGraph(selectedYear);
+        updateLineGraphs(selectedYear, filteredData, "Interest Rate vs. Year", "steelblue");
       }
 
       function updateLineGraphs(selectedYear, filteredData, chartTitle, lineColor) {
@@ -257,7 +257,7 @@
         const width = 400 - margin.left - margin.right;
         const height = 300 - margin.top - margin.bottom;
 
-        const svg = d3.select(`#${chartTitle.toLowerCase().replace(/\s+/g, '-')}-chart`)
+        const svg = d3.select(`.${chartTitle.toLowerCase().replace(/\s+/g, '-')}-chart`)
           .append("svg")
           .attr("width", width + margin.left + margin.right)
           .attr("height", height + margin.top + margin.bottom)
