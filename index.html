@@ -24,12 +24,10 @@
 
     <div id="interest-rate-chart"></div>
     <div id="inflation-rate-chart"></div>
-    <button id="next-button">Next</button>
   </div>
   
   <script>
     let sceneCounter = 1;
-    
     d3.csv("inflation-interest-unemployment.csv").then(data => {
       const years = Array.from(new Set(data.map(d => d.year)));
 
@@ -56,9 +54,6 @@
         if (sceneCounter === 1) {
           sceneCounter = 2;
           showScene2();
-        }
-        else if (sceneCounter === 2) {
-          window.location.href = "scene3.html";
         }
       });
 
@@ -170,7 +165,7 @@
             .attr("value", d => d)
             .text(d => d);
 
-          const defaultCountry = "United States";
+          const defaultCountry = "Uganda";
           countrySelect.property("value", defaultCountry);
 
           updateLineGraphs(defaultCountry);
@@ -205,11 +200,28 @@
         d3.select("#previous-button").remove();
 
         sceneCounter = 2;
-        const selectedYear = d3.select("#year-select").property("value");
-        updateGraph(selectedYear);
-        
-        d3.select("#scene2-container").select("label").remove();
+        const filteredData = data.filter(d => d.year === defaultYear);
+        const countries = filteredData.filter(d => d.incomeLevel === "Low income" || d.incomeLevel === "Lower middle income").map(d => d.country);
+        const countrySelect = d3.select("#country-select");
+        countrySelect.selectAll("option").remove();
+        const countryOptions = countrySelect
+          .selectAll("option")
+          .data(countries)
+          .enter()
+          .append("option")
+          .attr("value", d => d)
+          .text(d => d);
 
+        countrySelect.property("value", defaultCountry);
+
+        updateLineGraphs(defaultCountry);
+
+        countrySelect.on("change", function () {
+          const selectedCountry = this.value;
+          updateLineGraphs(selectedCountry);
+        });
+
+        d3.select("#scene2-container").select("label").remove();
         d3.select("#scene2-container").append("button")
           .attr("id", "previous-button")
           .text("Previous")
@@ -221,19 +233,6 @@
           });
       }
 
-      function showScene3() {
-      d3.select("#chart-container").style("display", "none");
-      d3.select("#year-select").style("display", "none");
-      d3.select("#next-button").style("display", "none");
-      d3.select("#previous-button").style("display", "block");
-      
-      d3.select("#scene2-container").style("display", "none");
-      d3.select("#scene3-container").style("display", "block");
-
-      const defaultCountry = "United States";
-      const filteredData = updateData(defaultCountry);
-      updateLineGraphs(filteredData, "3");
-      }
 
       function updateLineGraphs(selectedCountry) {
         d3.selectAll("#interest-rate-chart svg, #inflation-rate-chart svg").remove();
@@ -338,7 +337,5 @@
       }
     });
   </script>
-
-  <script src="scene3.html"></script>
 </body>
 </html>
