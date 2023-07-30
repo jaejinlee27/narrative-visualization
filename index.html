@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Narrative Visualization - Scene 1</title>
-  <!-- Include D3.js library -->
   <script src="https://d3js.org/d3.v7.min.js"></script>
 </head>
 <body>
@@ -25,6 +24,15 @@
     <div id="interest-rate-chart"></div>
     <div id="inflation-rate-chart"></div>
   </div>
+
+  <div id="scene3-container" style="display: none;">
+    <label for="income-level-select">Select Income Level:</label>
+    <select id="income-level-select"></select>
+
+    <div id="interest-rate-chart2"></div>
+    <div id="inflation-rate-chart2"></div>
+  </div>
+
   
   <script>
     let sceneCounter = 1;
@@ -55,12 +63,20 @@
           sceneCounter = 2;
           showScene2();
         }
+        else if (sceneCounter === 2) {
+          sceneCounter = 3;
+          showScene3();
+        }
       });
 
       d3.select("#previous-button").on("click", function() {
         if (sceneCounter === 2) {
           sceneCounter = 1;
           showScene1();
+        }
+        else if (sceneCounter === 3) {
+          sceneCounter = 2;
+          showScene2();
         }
       });
 
@@ -165,7 +181,7 @@
             .attr("value", d => d)
             .text(d => d);
 
-          const defaultCountry = "Uganda";
+          const defaultCountry = "Kenya";
           countrySelect.property("value", defaultCountry);
 
           updateLineGraphs(defaultCountry);
@@ -213,7 +229,7 @@
           .attr("value", d => d)
           .text(d => d);
 
-        const defaultCountry = "Uganda";
+        const defaultCountry = "Kenya";
         countrySelect.property("value", defaultCountry);
         updateLineGraphs(defaultCountry);
         countrySelect.on("change", function () {
@@ -225,7 +241,7 @@
         d3.select("#scene2-container").append("button")
           .attr("id", "previous-button")
           .text("Previous")
-          .on("click", function() {
+          .on("click", function () {
             if (sceneCounter === 2) {
               sceneCounter = 1;
               showScene1();
@@ -233,11 +249,60 @@
           });
       }
 
+      function showScene3() {
+        d3.select("#chart-container").style("display", "none");
+        d3.select("#year-select").style("display", "none");
+        d3.select("#next-button").style("display", "none");
+        d3.select("#scene3-container").style("display", "block");
+        d3.select("#interest-rate-chart").style("display", "block");
+        d3.select("#inflation-rate-chart").style("display", "block");
+        d3.select("#country-select").selectAll("option").remove();
+        d3.select("#previous-button").remove();
 
+        sceneCounter = 3;
+        const filteredData = data.filter(d => d.year === defaultYear);
+        const countries = filteredData.filter(d => d.incomeLevel === "High income").map(d => d.country);
+        const countrySelect = d3.select("#country-select");
+        countrySelect.selectAll("option").remove();
+        const countryOptions = countrySelect
+          .selectAll("option")
+          .data(countries)
+          .enter()
+          .append("option")
+          .attr("value", d => d)
+          .text(d => d);
+
+        const defaultCountry = "United States";
+        countrySelect.property("value", defaultCountry);
+        updateLineGraphs2(defaultCountry);
+        countrySelect.on("change", function () {
+          const selectedCountry = this.value;
+          updateLineGraphs2(selectedCountry);
+        });
+
+        d3.select("#scene2-container").insert("label", ":first-child")
+          .attr("for", "country-select")
+          .text("Select Country:");
+
+        d3.select("#scene2-container").append("button")
+          .attr("id", "previous-button")
+          .text("Previous")
+          .on("click", function () {
+            if (sceneCounter === 3) {
+              sceneCounter = 2;
+              showScene2();
+            }
+          });
+      }
 
       function updateLineGraphs(selectedCountry) {
-        d3.selectAll("#interest-rate-chart svg, #inflation-rate-chart svg").remove();
-        const filteredData = data.filter(d => d.country === selectedCountry);
+        const filteredData = data.filter(d => d.year === selectedYear);
+
+        if (sceneCounter === 2) {
+          filteredData = filteredData.filter(d => d.incomeLevel === "Low income" || d.incomeLevel === "Lower middle income");
+        } else if (sceneCounter === 3) {
+          filteredData = filteredData.filter(d => d.incomeLevel === "High income");
+        }
 
         const years = filteredData.map(d => d.year);
         const interestRates = filteredData.map(d => +d['Real interest rate (%)']);
