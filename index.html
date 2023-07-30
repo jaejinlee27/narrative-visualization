@@ -68,6 +68,23 @@
         if(sceneCounter === 1){
           const filteredData = data.filter(d => d.year === selectedYear);
 
+          const narrativeExplanation = `
+            This narrative visualization explores the relationship between 
+            real interest rates and inflation rates across different countries. 
+            The graph displays the real interest rate on the X-axis and the inflation 
+            rate on the Y-axis for the selected year (${selectedYear}).
+            
+            Blue dots indicate High income nations, green indicates Upper middle income, 
+            yellow indicate Lower middle income, and red indicate Low income nations.
+            
+            One thing that can be noticed right away is that the Higher income nations tends to have more stable(lower) Inflation and Interest rate.
+
+            Other thing that can also be noticed is that the generally the rates move in the same direction among different nations.
+            For example, in 2010, the rates are very high across all nations but in 2016 it is vice versa.
+
+            Hover over the data points to view the country names.
+            `;
+
           const margin = { top: 50, right: 50, bottom: 70, left: 70 };
           const width = 800 - margin.left - margin.right;
           const height = 500 - margin.top - margin.bottom;
@@ -111,6 +128,10 @@
             .attr("font-size", "10px")
             .attr("fill", "black")
             .style("visibility", "hidden");
+
+            d3.select("#chart-container")
+              .insert("p", ":first-child")
+              .text(narrativeExplanation);
 
           //show country label
           circles.on("mouseover", function (event, d) {
@@ -372,7 +393,7 @@
         text-align: center;
         padding: 6px;
         font-size: 12px;
-        background: #f7f7f7;
+        background: #ffffff;
         border: 1px solid #ccc;
         border-radius: 4px;
         pointer-events: none;
