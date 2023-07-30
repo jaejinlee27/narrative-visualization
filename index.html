@@ -194,10 +194,11 @@
         d3.select("#chart-container").style("display", "none");
         d3.select("#year-select").style("display", "none");
         d3.select("#next-button").style("display", "none");
-
         d3.select("#scene2-container").style("display", "block");
 
         d3.select("#country-select").selectAll("option").remove();
+        d3.select("#previous-button").remove();
+
         sceneCounter = 2;
         const selectedYear = d3.select("#year-select").property("value");
         updateGraph(selectedYear);
@@ -260,6 +261,10 @@
           .y(d => yScale(d))
           .curve(d3.curveMonotoneX);
 
+        const xAxis = d3.axisBottom(xScale)
+          .tickValues(xScale.domain().filter((d, i) => i % 5 === 0))
+          .tickFormat(d3.format("d"));
+
         interestRateSvg.append("path")
           .datum(interestRates)
           .attr("fill", "none")
@@ -276,7 +281,7 @@
 
         interestRateSvg.append("g")
           .attr("transform", `translate(0, ${height})`)
-          .call(d3.axisBottom(xScale))
+          .call(xAxis)
           .selectAll("text")
           .attr("y", 10)
           .attr("x", -5)
@@ -286,7 +291,7 @@
 
         inflationRateSvg.append("g")
           .attr("transform", `translate(0, ${height})`)
-          .call(d3.axisBottom(xScale))
+          .call(xAxis)
           .selectAll("text")
           .attr("y", 10)
           .attr("x", -5)
