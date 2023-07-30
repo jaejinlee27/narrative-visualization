@@ -24,6 +24,7 @@
 
     <div id="interest-rate-chart"></div>
     <div id="inflation-rate-chart"></div>
+    <button id="next-button">Next</button>
   </div>
   
   <script>
@@ -56,15 +57,15 @@
           sceneCounter = 2;
           showScene2();
         }
+        else if (sceneCounter === 2) {
+          window.location.href = "scene3.html";
+        }
       });
 
       d3.select("#previous-button").on("click", function() {
         if (sceneCounter === 2) {
           sceneCounter = 1;
           showScene1();
-        }
-        else if (sceneCounter === 2) {
-          window.location.href = "scene3.html";
         }
       });
 
