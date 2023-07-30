@@ -213,6 +213,7 @@
 
         d3.select("#scene2-container").style("display", "block");
 
+        // Remove previous options from the country dropdowns
         d3.select("#country-select-1").selectAll("option").remove();
         d3.select("#country-select-2").selectAll("option").remove();
 
@@ -221,18 +222,21 @@
         const selectedYear = d3.select("#year-select").property("value");
 
         const defaultCountry1 = "Uganda";
-        const filteredData1 = data.filter(d => d.year === selectedYear && d.country === defaultCountry1);
+        const filteredData1 = updateData(defaultCountry1);
         updateLineGraphs(filteredData1, "1");
 
         const defaultCountry2 = "United States";
-        const filteredData2 = data.filter(d => d.year === selectedYear && d.country === defaultCountry2);
+        const filteredData2 = updateData(defaultCountry2);
         updateLineGraphs(filteredData2, "2");
+      }
+
+      function updateData(selectedCountry) {
+        return data.filter(d => d.country === selectedCountry);
       }
 
       function updateLineGraphs(selectedCountry, setNumber) {
         d3.select(`#interest-rate-chart-${setNumber}`).selectAll("svg").remove();
         d3.select(`#inflation-rate-chart-${setNumber}`).selectAll("svg").remove();
-        const filteredData = data.filter(d => d.country === selectedCountry);
 
         const years = filteredData.map(d => d.year);
         const interestRates = filteredData.map(d => +d['Real interest rate (%)']);
