@@ -42,6 +42,7 @@
   
   <script>
     let sceneCounter = 1;
+    let filteredData = [];
     d3.csv("inflation-interest-unemployment.csv").then(data => {
       const years = Array.from(new Set(data.map(d => d.year)));
 
@@ -166,7 +167,7 @@
         else if (sceneCounter === 2) {
           const filteredData = data.filter(d => d.year === selectedYear);
           const countries = Array.from(new Set(filteredData.map(d => d.country)));
-          const countrySelect = d3.select("#country-select");
+          const countrySelect = d3.select("#country-select-1");
 
           countrySelect.selectAll("option").remove();
 
@@ -213,21 +214,18 @@
 
         d3.select("#scene2-container").style("display", "block");
 
-        // Remove previous options from the country dropdowns
         d3.select("#country-select-1").selectAll("option").remove();
         d3.select("#country-select-2").selectAll("option").remove();
-
         sceneCounter = 2;
-
         const selectedYear = d3.select("#year-select").property("value");
 
         const defaultCountry1 = "Uganda";
-        const filteredData1 = updateData(defaultCountry1);
-        updateLineGraphs(filteredData1, "1");
+        filteredData = updateData(defaultCountry1);
+        updateLineGraphs(filteredData, "1");
 
         const defaultCountry2 = "United States";
-        const filteredData2 = updateData(defaultCountry2);
-        updateLineGraphs(filteredData2, "2");
+        filteredData = updateData(defaultCountry2);
+        updateLineGraphs(filteredData, "2");
       }
 
       function updateData(selectedCountry) {
