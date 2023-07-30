@@ -222,19 +222,18 @@
         const selectedYear = d3.select("#year-select").property("value");
 
         const defaultCountry1 = "Uganda";
-        filteredData = updateData(defaultCountry1);
-        updateLineGraphs(filteredData, "1");
+        const filteredData1 = updateData(defaultCountry1);
+        updateLineGraphs(filteredData1, "1");
 
         const defaultCountry2 = "United States";
-        filteredData = updateData(defaultCountry2);
-        updateLineGraphs(filteredData, "2");
+        const filteredData2 = updateData(defaultCountry2);
+        updateLineGraphs(filteredData2, "2");
 
-        const countries = Array.from(new Set(filteredData.map(d => d.country)));
-
+        const countries1 = Array.from(new Set(filteredData1.map(d => d.country)));
         const countrySelect1 = d3.select("#country-select-1");
         countrySelect1
           .selectAll("option")
-          .data(countries)
+          .data(countries1)
           .enter()
           .append("option")
           .attr("value", d => d)
@@ -242,10 +241,11 @@
 
         countrySelect1.property("value", defaultCountry1);
 
+        const countries2 = Array.from(new Set(filteredData2.map(d => d.country)));
         const countrySelect2 = d3.select("#country-select-2");
         countrySelect2
           .selectAll("option")
-          .data(countries)
+          .data(countries2)
           .enter()
           .append("option")
           .attr("value", d => d)
@@ -255,12 +255,12 @@
 
         countrySelect1.on("change", function () {
           const selectedCountry = this.value;
-          updateLineGraphs(selectedCountry, "1"); 
+          updateLineGraphs(updateData(selectedCountry), "1");
         });
 
         countrySelect2.on("change", function () {
           const selectedCountry = this.value;
-          updateLineGraphs(selectedCountry, "2");
+          updateLineGraphs(updateData(selectedCountry), "2");
         });
       }
 
