@@ -220,14 +220,7 @@
         d3.selectAll("#interest-rate-chart svg, #inflation-rate-chart svg").remove();
         const tooltip = d3.select("body").append("div")
           .attr("class", "tooltip")
-          .style("opacity", 0)
-          .style("position", "absolute")
-          .style("pointer-events", "none")
-          .style("background", "#f7f7f7")
-          .style("border", "1px solid #ccc")
-          .style("border-radius", "4px")
-          .style("padding", "6px")
-          .style("font-size", "12px");
+          .style("opacity", 0);
         const filteredData = data.filter(d => d.country === selectedCountry);
 
         const years = filteredData.map(d => d.year);
@@ -327,56 +320,49 @@
           .attr("text-anchor", "middle")
           .text("Inflation Rate vs. Year");
 
-        const interestCircles = interestRateSvg.selectAll("circle")
-          .data(filteredData);
+          interestRateSvg.selectAll("circle")
+        .data(interestRates)
+        .enter()
+        .append("circle")
+        .attr("cx", (d, i) => xScale(years[i]) + xScale.bandwidth() / 2)
+        .attr("cy", d => yScale(d))
+        .attr("r", 5)
+        .attr("fill", "steelblue")
+        .on("mouseover", (event, d, i) => {
+          tooltip.transition()
+            .duration(200)
+            .style("opacity", .9);
+          tooltip.html(`Interest Rate: ${d.toFixed(2)}%`)
+            .style("left", (event.pageX + 10) + "px")
+            .style("top", (event.pageY - 28) + "px");
+        })
+        .on("mouseout", () => {
+          tooltip.transition()
+            .duration(500)
+            .style("opacity", 0);
+        });
 
-        interestCircles.enter()
-          .append("circle")
-          .merge(interestCircles)
-          .attr("cx", d => xScale(d.year) + xScale.bandwidth() / 2)
-          .attr("cy", d => yScale(+d['Real interest rate (%)']))
-          .attr("r", 5)
-          .attr("fill", "steelblue")
-          .on("mouseover", (event, d) => {
-              tooltip.transition()
-                  .duration(200)
-                  .style("opacity", .9)
-                  .style("left", (event.pageX + 10) + "px") // Updated position
-                  .style("top", (event.pageY - 28) + "px"); // Updated position
-              tooltip.html(`Year: ${d.year}<br>Interest Rate: ${d['Real interest rate (%)'].toFixed(2)}%`); // Updated tooltip content
-          })
-          .on("mouseout", () => {
-            tooltip.transition()
-              .duration(500)
-              .style("opacity", 0);
-          });
-
-        interestCircles.exit().remove();
-
-        const inflationCircles = inflationRateSvg.selectAll("circle")
-          .data(filteredData);
-
-        inflationCircles.enter()
-          .append("circle")
-          .merge(inflationCircles)
-          .attr("cx", d => xScale(d.year) + xScale.bandwidth() / 2)
-          .attr("cy", d => yScale(+d['Inflation, consumer prices (annual %)']))
-          .attr("r", 5)
-          .attr("fill", "green")
-          .on("mouseover", (event, d) => {
-              tooltip.transition()
-                  .duration(200)
-                  .style("opacity", .9)
-                  .style("left", (event.pageX + 10) + "px") 
-                  .style("top", (event.pageY - 28) + "px"); 
-              tooltip.html(`Year: ${d.year}<br>Inflation Rate: ${d['Inflation, consumer prices (annual %)'].toFixed(2)}%`); // Updated tooltip content
-          })
-          .on("mouseout", () => {
-            tooltip.transition()
-              .duration(500)
-              .style("opacity", 0);
-          });
-        inflationCircles.exit().remove();
+      inflationRateSvg.selectAll("circle")
+        .data(inflationRates)
+        .enter()
+        .append("circle")
+        .attr("cx", (d, i) => xScale(years[i]) + xScale.bandwidth() / 2)
+        .attr("cy", d => yScale(d))
+        .attr("r", 5)
+        .attr("fill", "green")
+        .on("mouseover", (event, d, i) => {
+          tooltip.transition()
+            .duration(200)
+            .style("opacity", .9);
+          tooltip.html(`Inflation Rate: ${d.toFixed(2)}%`)
+            .style("left", (event.pageX + 10) + "px")
+            .style("top", (event.pageY - 28) + "px");
+        })
+        .on("mouseout", () => {
+          tooltip.transition()
+            .duration(500)
+            .style("opacity", 0);
+        });
       }
     });
   </script>
