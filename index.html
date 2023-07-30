@@ -220,7 +220,14 @@
         d3.selectAll("#interest-rate-chart svg, #inflation-rate-chart svg").remove();
         const tooltip = d3.select("body").append("div")
           .attr("class", "tooltip")
-          .style("opacity", 0);
+          .style("opacity", 0)
+          .style("position", "absolute")
+          .style("pointer-events", "none")
+          .style("background", "#f7f7f7")
+          .style("border", "1px solid #ccc")
+          .style("border-radius", "4px")
+          .style("padding", "6px")
+          .style("font-size", "12px");
         const filteredData = data.filter(d => d.country === selectedCountry);
 
         const years = filteredData.map(d => d.year);
@@ -333,10 +340,10 @@
           .on("mouseover", (event, d) => {
             tooltip.transition()
               .duration(200)
-              .style("opacity", .9);
-            tooltip.html(`Interest Rate: ${d['Real interest rate (%)'].toFixed(2)}%`)
-              .style("left", (event.pageX + 10) + "px")
-              .style("top", (event.pageY - 28) + "px");
+              .style("opacity", .9)
+              .style("left", (event.pageX + 10) + "px") // Updated position
+              .style("top", (event.pageY - 28) + "px"); // Updated position
+            tooltip.html(`Interest Rate: ${d['Real interest rate (%)'].toFixed(2)}%`);
           })
           .on("mouseout", () => {
             tooltip.transition()
@@ -359,17 +366,16 @@
           .on("mouseover", (event, d) => {
             tooltip.transition()
               .duration(200)
-              .style("opacity", .9);
-            tooltip.html(`Inflation Rate: ${d['Inflation, consumer prices (annual %)'].toFixed(2)}%`)
-              .style("left", (event.pageX + 10) + "px")
-              .style("top", (event.pageY - 28) + "px");
+              .style("opacity", .9)
+              .style("left", (event.pageX + 10) + "px") // Updated position
+              .style("top", (event.pageY - 28) + "px"); // Updated position
+            tooltip.html(`Inflation Rate: ${d['Inflation, consumer prices (annual %)'].toFixed(2)}%`);
           })
           .on("mouseout", () => {
             tooltip.transition()
               .duration(500)
               .style("opacity", 0);
           });
-
         inflationCircles.exit().remove();
       }
     });
