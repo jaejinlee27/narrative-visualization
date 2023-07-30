@@ -20,16 +20,23 @@
   </div>
   <div id="scene2-container" style="display: none;">
     <div>
-      <label for="country-select-1">Select Country:</label>
+      <label for="country-select-1">Select Country (Set 1):</label>
       <select id="country-select-1"></select>
+    </div>
+    <div id="graph-container-1" style="display: inline-block; vertical-align: top;">
       <div id="interest-rate-chart-1"></div>
       <div id="inflation-rate-chart-1"></div>
     </div>
-
     <div>
-      <label for="country-select-2">Country: United States</label>
+      <label for="country-select-2">Select Country (Set 2):</label>
+      <select id="country-select-2"></select>
+    </div>
+    <div id="graph-container-2" style="display: inline-block; vertical-align: top;">
       <div id="interest-rate-chart-2"></div>
       <div id="inflation-rate-chart-2"></div>
+    </div>
+    <div>
+      <button id="previous-button">Previous</button>
     </div>
   </div>
   
@@ -185,6 +192,7 @@
       }
 
       function showScene1() {
+        d3.select("#previous-button").style("display", "none");
         d3.select("#chart-container").style("display", "block");
         d3.select("#year-select").style("display", "block");
         d3.select("#next-button").style("display", "block");
@@ -213,10 +221,12 @@
         const selectedYear = d3.select("#year-select").property("value");
 
         const defaultCountry1 = "Uganda";
-        updateLineGraphs(defaultCountry1, "1");
+        const filteredData1 = data.filter(d => d.year === selectedYear && d.country === defaultCountry1);
+        updateLineGraphs(filteredData1, "1");
 
         const defaultCountry2 = "United States";
-        updateLineGraphs(defaultCountry2, "2");
+        const filteredData2 = data.filter(d => d.year === selectedYear && d.country === defaultCountry2);
+        updateLineGraphs(filteredData2, "2");
       }
 
       function updateLineGraphs(selectedCountry, setNumber) {
