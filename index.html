@@ -28,6 +28,7 @@
   
   <script>
     let sceneCounter = 1;
+    
     d3.csv("inflation-interest-unemployment.csv").then(data => {
       const years = Array.from(new Set(data.map(d => d.year)));
 
@@ -216,6 +217,20 @@
           });
       }
 
+      function showScene3() {
+      d3.select("#chart-container").style("display", "none");
+      d3.select("#year-select").style("display", "none");
+      d3.select("#next-button").style("display", "none");
+      d3.select("#previous-button").style("display", "block");
+      
+      d3.select("#scene2-container").style("display", "none");
+      d3.select("#scene3-container").style("display", "block");
+
+      const defaultCountry = "United States";
+      const filteredData = updateData(defaultCountry);
+      updateLineGraphs(filteredData, "3");
+      }
+
       function updateLineGraphs(selectedCountry) {
         d3.selectAll("#interest-rate-chart svg, #inflation-rate-chart svg").remove();
         const filteredData = data.filter(d => d.country === selectedCountry);
@@ -319,5 +334,7 @@
       }
     });
   </script>
+
+  <script src="scene3.html"></script>
 </body>
 </html>
