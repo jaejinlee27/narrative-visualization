@@ -338,12 +338,12 @@
           .attr("r", 5)
           .attr("fill", "steelblue")
           .on("mouseover", (event, d) => {
-            tooltip.transition()
-              .duration(200)
-              .style("opacity", .9)
-              .style("left", (event.pageX + 10) + "px") // Updated position
-              .style("top", (event.pageY - 28) + "px"); // Updated position
-            tooltip.html(`Interest Rate: ${d['Real interest rate (%)'].toFixed(2)}%`);
+              tooltip.transition()
+                  .duration(200)
+                  .style("opacity", .9)
+                  .style("left", (event.pageX + 10) + "px") // Updated position
+                  .style("top", (event.pageY - 28) + "px"); // Updated position
+              tooltip.html(`Year: ${d.year}<br>Interest Rate: ${d['Real interest rate (%)'].toFixed(2)}%`); // Updated tooltip content
           })
           .on("mouseout", () => {
             tooltip.transition()
@@ -364,12 +364,12 @@
           .attr("r", 5)
           .attr("fill", "green")
           .on("mouseover", (event, d) => {
-            tooltip.transition()
-              .duration(200)
-              .style("opacity", .9)
-              .style("left", (event.pageX + 10) + "px") // Updated position
-              .style("top", (event.pageY - 28) + "px"); // Updated position
-            tooltip.html(`Inflation Rate: ${d['Inflation, consumer prices (annual %)'].toFixed(2)}%`);
+              tooltip.transition()
+                  .duration(200)
+                  .style("opacity", .9)
+                  .style("left", (event.pageX + 10) + "px") 
+                  .style("top", (event.pageY - 28) + "px"); 
+              tooltip.html(`Year: ${d.year}<br>Inflation Rate: ${d['Inflation, consumer prices (annual %)'].toFixed(2)}%`); // Updated tooltip content
           })
           .on("mouseout", () => {
             tooltip.transition()
