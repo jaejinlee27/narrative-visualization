@@ -321,18 +321,18 @@
           .text("Inflation Rate vs. Year");
 
         interestRateSvg.selectAll("circle")
-          .data(interestRates)
+          .data(filteredData)
           .enter()
           .append("circle")
-          .attr("cx", (d, i) => xScale(years[i]) + xScale.bandwidth() / 2)
-          .attr("cy", d => yScale(d))
+          .attr("cx", d => xScale(d.year) + xScale.bandwidth() / 2)
+          .attr("cy", d => yScale(+d['Real interest rate (%)']))
           .attr("r", 5)
           .attr("fill", "steelblue")
-          .on("mouseover", (event, d, i) => {
+          .on("mouseover", (event, d) => {
             tooltip.transition()
               .duration(200)
               .style("opacity", .9);
-            tooltip.html(`Year: ${years[i]}<br>Interest Rate: ${d.toFixed(2)}%`)
+            tooltip.html(`Interest Rate: ${d['Real interest rate (%)'].toFixed(2)}%`)
               .style("left", (event.pageX + 10) + "px")
               .style("top", (event.pageY - 28) + "px");
           })
@@ -343,18 +343,18 @@
           });
 
         inflationRateSvg.selectAll("circle")
-          .data(inflationRates)
+          .data(filteredData)
           .enter()
           .append("circle")
-          .attr("cx", (d, i) => xScale(years[i]) + xScale.bandwidth() / 2)
-          .attr("cy", d => yScale(d))
+          .attr("cx", d => xScale(d.year) + xScale.bandwidth() / 2)
+          .attr("cy", d => yScale(+d['Inflation, consumer prices (annual %)']))
           .attr("r", 5)
           .attr("fill", "green")
-          .on("mouseover", (event, d, i) => {
+          .on("mouseover", (event, d) => {
             tooltip.transition()
               .duration(200)
               .style("opacity", .9);
-            tooltip.html(`Year: ${years[i]}<br>Inflation Rate: ${d.toFixed(2)}%`)
+            tooltip.html(`Inflation Rate: ${d['Inflation, consumer prices (annual %)'].toFixed(2)}%`)
               .style("left", (event.pageX + 10) + "px")
               .style("top", (event.pageY - 28) + "px");
           })
