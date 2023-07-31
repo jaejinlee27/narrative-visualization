@@ -8,9 +8,9 @@
   <script src="https://d3js.org/d3.v7.min.js"></script>
 </head>
 <body>
+  <div id="narrative-container-scene1" style="white-space: pre-wrap;"></div> 
   <div id="chart-container"></div>
-  <div id="narrative-container-scene1" style="white-space: pre-wrap;"></div> <!-- Add a new container for the narrative in scene 2 -->
-  <div id="narrative-container-scene2" style="white-space: pre-wrap;"></div> <!-- Add a new container for the narrative in scene 2 -->
+  <div id="narrative-container-scene2" style="white-space: pre-wrap;"></div> 
 
   <div>
     <label for="year-select">Select Year:</label>
@@ -80,7 +80,7 @@
             Blue dots indicate High income nations, green indicates Upper middle income, 
             yellow indicate Lower middle income, and red indicate Low income nations.
             
-            One thing that can be noticed right away is that the Higher income nations tends to have more stable(lower) Inflation and Interest rate.
+            One thing that can be noticed right away is that the Higher income nations tends to have more stable (lower) Inflation and Interest rate.
 
             Other thing that can also be noticed is that the generally the rates move in the same direction among different nations.
             For example, in 2010, the rates are very high across all nations but in 2016 it is vice versa.
@@ -212,8 +212,8 @@
       }
 
       function showScene1() {
-        d3.select("#chart-container").style("display", "block");
         d3.select("#narrative-container-scene1").style("display", "block");
+        d3.select("#chart-container").style("display", "block");
         d3.select("#narrative-container-scene2").style("display", "none");
         d3.select("#year-select").style("display", "block");
         d3.select("#next-button").style("display", "block");
