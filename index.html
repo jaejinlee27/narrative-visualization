@@ -8,23 +8,12 @@
 </head>
 <body>
   <div>
-    <p>
-      This narrative visualization explores the relationship between real interest rates and inflation rates across different countries. 
-      The graph displays the real interest rate on the X-axis and the inflation rate on the Y-axis for the selected year.
-      Blue dots indicate High income nations, green indicates Upper middle income, yellow indicates Lower middle income, and red indicate Low income nations.
-    </p>
-    <p>
-      One thing that can be noticed right away is that the Higher income nations tend to have more stable (lower) Inflation and Interest rate. 
-      Another thing that can also be noticed is that the rates generally move in the same direction among different nations. 
-      For example, in 2010, the rates are very high across all nations, but in 2016 it is vice versa.
-    </p>
-    <p>  
-      Hover over the data points to view the country names.
-    </p>
     <label for="year-select">Select Year:</label>
     <select id="year-select"></select>
   </div>
   <div id="chart-container"></div>
+
+  <div id="narrative-container" style="white-space: pre-wrap;"></div>
 
   <div>
     <button id="previous-button" style="display: none;">Previous</button>
@@ -79,6 +68,21 @@
       function updateGraph(selectedYear) {
         if(sceneCounter === 1){
           const filteredData = data.filter(d => d.year === selectedYear);
+
+          const narrativeExplanation = `
+            This narrative visualization explores the relationship between real interest rates and inflation rates across different countries. 
+            The graph displays the real interest rate on the X-axis and the inflation rate on the Y-axis for the selected year (${selectedYear}).
+
+            Blue dots indicate High income nations, green indicates Upper middle income, yellow indicates Lower middle income, and red indicate Low income nations. 
+            One thing that can be noticed right away is that the Higher income nations tend to have more stable (lower) Inflation and Interest rate. 
+            Another thing that can also be noticed is that the rates generally move in the same direction among different nations. 
+            For example, in 2010, the rates are very high across all nations, but in 2016 it is vice versa.
+
+            Hover over the data points to view the country names.
+          `;
+          const narrativeContainer = d3.select("#narrative-container");
+          // Update the text content of the narrative-container div element
+          narrativeContainer.text(narrativeExplanation);
 
           const margin = { top: 50, right: 50, bottom: 70, left: 70 };
           const width = 800 - margin.left - margin.right;
