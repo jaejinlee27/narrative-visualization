@@ -7,13 +7,13 @@
   <script src="https://d3js.org/d3.v7.min.js"></script>
 </head>
 <body>
+  <div id="narrative-container" style="white-space: pre-wrap;"></div>
+
   <div>
     <label for="year-select">Select Year:</label>
     <select id="year-select"></select>
   </div>
   <div id="chart-container"></div>
-
-  <div id="narrative-container" style="white-space: pre-wrap;"></div>
 
   <div>
     <button id="previous-button" style="display: none;">Previous</button>
@@ -81,7 +81,6 @@
             Hover over the data points to view the country names.
           `;
           const narrativeContainer = d3.select("#narrative-container");
-          // Update the text content of the narrative-container div element
           narrativeContainer.text(narrativeExplanation);
 
           const margin = { top: 50, right: 50, bottom: 70, left: 70 };
