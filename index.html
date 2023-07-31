@@ -347,7 +347,6 @@
           .tickValues(xScale.domain().filter((d, i) => i % 5 === 0))
           .tickFormat(d3.format("d"));
 
-
         // Interest Rate Annotations
         const interestRateAnnotationGroup = interestRateSvg.append("g").attr("class", "annotations");
         const highestInterestRateData = filteredData.reduce((acc, curr) => {
@@ -365,20 +364,13 @@
           .attr("fill", "blue");
 
         const interestRateAnnotationX = highestInterestRateX + 20;
-        const interestRateAnnotationY = highestInterestRateY - interestRateCircleRadius - 10;
+        const interestRateAnnotationY = highestInterestRateY - interestRateCircleRadius - 10; // Adjusted Y position
         interestRateAnnotationGroup.append("text")
           .attr("x", interestRateAnnotationX)
           .attr("y", interestRateAnnotationY)
           .attr("font-size", "12px")
           .attr("fill", "black")
-          .attr("font-weight", "bold") // Added font-weight to make the text bold
           .text("Highest Interest Rate");
-
-        const interestRateArrowX = highestInterestRateX + 20;
-        const interestRateArrowY = highestInterestRateY - interestRateCircleRadius - 10;
-        interestRateAnnotationGroup.append("path")
-          .attr("d", `M${interestRateArrowX},${interestRateArrowY} L${interestRateArrowX + 10},${interestRateArrowY - 20} L${interestRateArrowX - 10},${interestRateArrowY - 20} Z`)
-          .attr("fill", "blue");
 
         // Inflation Rate Annotations
         const inflationAnnotationGroup = inflationRateSvg.append("g").attr("class", "annotations");
@@ -397,22 +389,15 @@
           .attr("fill", "green");
 
         const inflationRateAnnotationX = highestInflationRateX + 20;
-        const inflationRateAnnotationY = highestInflationRateY - inflationRateCircleRadius - 10;
+        const inflationRateAnnotationY = highestInflationRateY - inflationRateCircleRadius - 10; // Adjusted Y position
         inflationAnnotationGroup.append("text")
           .attr("x", inflationRateAnnotationX)
           .attr("y", inflationRateAnnotationY)
           .attr("font-size", "12px")
           .attr("fill", "black")
-          .attr("font-weight", "bold") 
           .text("Highest Inflation Rate");
 
-  const inflationRateArrowX = highestInflationRateX + 20;
-  const inflationRateArrowY = highestInflationRateY - inflationRateCircleRadius - 10;
-  inflationAnnotationGroup.append("path")
-    .attr("d", `M${inflationRateArrowX},${inflationRateArrowY} L${inflationRateArrowX + 10},${inflationRateArrowY - 20} L${inflationRateArrowX - 10},${inflationRateArrowY - 20} Z`)
-    .attr("fill", "green");
-
-
+        // Draw Interest Rate Line
         interestRateSvg.append("path")
           .datum(interestRates)
           .attr("fill", "none")
@@ -420,6 +405,7 @@
           .attr("stroke-width", 2)
           .attr("d", interestRateLine);
 
+        // Draw Inflation Rate Line
         inflationRateSvg.append("path")
           .datum(inflationRates)
           .attr("fill", "none")
@@ -466,48 +452,48 @@
           .text("Inflation Rate vs. Year");
 
         interestRateSvg.selectAll("circle")
-        .data(interestRates)
-        .enter()
-        .append("circle")
-        .attr("cx", (d, i) => xScale(years[i]) + xScale.bandwidth() / 2)
-        .attr("cy", d => yScale(d))
-        .attr("r", 3)
-        .attr("fill", "blue")
-        .on("mouseover", (event, d, i) => {
-          tooltip.transition()
-            .duration(200)
-            .style("opacity", .9);
-          tooltip.html(`Interest Rate: ${d.toFixed(2)}%`)
-            .style("left", (event.pageX + 10) + "px")
-            .style("top", (event.pageY - 28) + "px");
-        })
-        .on("mouseout", () => {
-          tooltip.transition()
-            .duration(500)
-            .style("opacity", 0);
-        });
+          .data(interestRates)
+          .enter()
+          .append("circle")
+          .attr("cx", (d, i) => xScale(years[i]) + xScale.bandwidth() / 2)
+          .attr("cy", d => yScale(d))
+          .attr("r", 3) // Keep the circle size the same for all points
+          .attr("fill", "blue")
+          .on("mouseover", (event, d, i) => {
+            tooltip.transition()
+              .duration(200)
+              .style("opacity", .9);
+            tooltip.html(`Interest Rate: ${d.toFixed(2)}%`)
+              .style("left", (event.pageX + 10) + "px")
+              .style("top", (event.pageY - 28) + "px");
+          })
+          .on("mouseout", () => {
+            tooltip.transition()
+              .duration(500)
+              .style("opacity", 0);
+          });
 
-      inflationRateSvg.selectAll("circle")
-        .data(inflationRates)
-        .enter()
-        .append("circle")
-        .attr("cx", (d, i) => xScale(years[i]) + xScale.bandwidth() / 2)
-        .attr("cy", d => yScale(d))
-        .attr("r", 3)
-        .attr("fill", "green")
-        .on("mouseover", (event, d, i) => {
-          tooltip.transition()
-            .duration(200)
-            .style("opacity", .9);
-          tooltip.html(`Inflation Rate: ${d.toFixed(2)}%`)
-            .style("left", (event.pageX + 10) + "px")
-            .style("top", (event.pageY - 28) + "px");
-        })
-        .on("mouseout", () => {
-          tooltip.transition()
-            .duration(500)
-            .style("opacity", 0);
-        });
+        inflationRateSvg.selectAll("circle")
+          .data(inflationRates)
+          .enter()
+          .append("circle")
+          .attr("cx", (d, i) => xScale(years[i]) + xScale.bandwidth() / 2)
+          .attr("cy", d => yScale(d))
+          .attr("r", 3) // Keep the circle size the same for all points
+          .attr("fill", "green")
+          .on("mouseover", (event, d, i) => {
+            tooltip.transition()
+              .duration(200)
+              .style("opacity", .9);
+            tooltip.html(`Inflation Rate: ${d.toFixed(2)}%`)
+              .style("left", (event.pageX + 10) + "px")
+              .style("top", (event.pageY - 28) + "px");
+          })
+          .on("mouseout", () => {
+            tooltip.transition()
+              .duration(500)
+              .style("opacity", 0);
+          });
       }
     });
   </script>
