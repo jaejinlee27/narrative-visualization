@@ -8,7 +8,7 @@
   <script src="https://d3js.org/d3.v7.min.js"></script>
 </head>
 <body>
-  <div id="narrative-container" style="white-space: pre-wrap;"></div> <!-- Add a new container for the narrative in scene 2 -->
+  <div id="chart-container" style="white-space: pre-wrap;"></div> <!-- Add a new container for the narrative in scene 2 -->
   <div id="narrative-container-scene2" style="white-space: pre-wrap;"></div> <!-- Add a new container for the narrative in scene 2 -->
 
   <div>
@@ -131,7 +131,7 @@
             .attr("fill", "black")
             .style("visibility", "hidden");
 
-            d3.select("#narrative-container").html("").text(narrativeExplanation2);
+            d3.select("#chart-container").html("").text(narrativeExplanation);
 
 
           //show country label
