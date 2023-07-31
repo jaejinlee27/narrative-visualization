@@ -348,9 +348,8 @@
           .tickFormat(d3.format("d"));
 
 
-        //annotation
-        const annotationGroup = interestRateSvg.append("g").attr("class", "annotations");
-
+        // Interest Rate Annotations
+        const interestRateAnnotationGroup = interestRateSvg.append("g").attr("class", "annotations");
         const highestInterestRateData = filteredData.reduce((acc, curr) => {
           return (acc['Real interest rate (%)'] > curr['Real interest rate (%)']) ? acc : curr;
         });
@@ -359,7 +358,7 @@
         const highestInterestRateY = yScale(+highestInterestRateData['Real interest rate (%)']);
 
         const interestRateCircleRadius = 6;
-        annotationGroup.append("circle")
+        interestRateAnnotationGroup.append("circle")
           .attr("cx", highestInterestRateX)
           .attr("cy", highestInterestRateY)
           .attr("r", interestRateCircleRadius)
@@ -367,7 +366,7 @@
 
         const interestRateAnnotationX = highestInterestRateX + 20;
         const interestRateAnnotationY = highestInterestRateY - interestRateCircleRadius;
-        annotationGroup.append("text")
+        interestRateAnnotationGroup.append("text")
           .attr("x", interestRateAnnotationX)
           .attr("y", interestRateAnnotationY)
           .attr("font-size", "12px")
@@ -376,42 +375,40 @@
 
         const interestRateArrowX = highestInterestRateX + 20;
         const interestRateArrowY = highestInterestRateY - interestRateCircleRadius;
-
-        annotationGroup.append("path")
-          .attr("d", `M${interestRateArrowX},${interestRateArrowY} L${interestRateArrowX - 15},${interestRateArrowY - 15} L${interestRateArrowX + 15},${interestRateArrowY - 15} Z`)
+        interestRateAnnotationGroup.append("path")
+          .attr("d", `M${interestRateArrowX},${interestRateArrowY} L${interestRateArrowX + 10},${interestRateArrowY - 20} L${interestRateArrowX - 10},${interestRateArrowY - 20} Z`)
           .attr("fill", "blue");
 
-          //inflation annotation
-          const inflationAnnotationGroup = inflationRateSvg.append("g").attr("class", "annotations");
+        // Inflation Rate Annotations
+        const inflationAnnotationGroup = inflationRateSvg.append("g").attr("class", "annotations");
+        const highestInflationRateData = filteredData.reduce((acc, curr) => {
+          return (acc['Inflation, consumer prices (annual %)'] > curr['Inflation, consumer prices (annual %)']) ? acc : curr;
+        });
 
-          const highestInflationRateData = filteredData.reduce((acc, curr) => {
-            return (acc['Inflation, consumer prices (annual %)'] > curr['Inflation, consumer prices (annual %)']) ? acc : curr;
-          });
+        const highestInflationRateX = xScale(highestInflationRateData.year) + xScale.bandwidth() / 2;
+        const highestInflationRateY = yScale(+highestInflationRateData['Inflation, consumer prices (annual %)']);
 
-          const highestInflationRateX = xScale(highestInflationRateData.year) + xScale.bandwidth() / 2;
-          const highestInflationRateY = yScale(+highestInflationRateData['Inflation, consumer prices (annual %)']);
+        const inflationRateCircleRadius = 6;
+        inflationAnnotationGroup.append("circle")
+          .attr("cx", highestInflationRateX)
+          .attr("cy", highestInflationRateY)
+          .attr("r", inflationRateCircleRadius)
+          .attr("fill", "green");
 
-          const inflationRateCircleRadius = 6;
-          inflationAnnotationGroup.append("circle")
-            .attr("cx", highestInflationRateX)
-            .attr("cy", highestInflationRateY)
-            .attr("r", inflationRateCircleRadius)
-            .attr("fill", "green");
-          const inflationRateAnnotationX = highestInflationRateX + 20;
-          const inflationRateAnnotationY = highestInflationRateY - inflationRateCircleRadius;
-          inflationAnnotationGroup.append("text")
-            .attr("x", inflationRateAnnotationX)
-            .attr("y", inflationRateAnnotationY)
-            .attr("font-size", "12px")
-            .attr("fill", "black")
-            .text("Highest Inflation Rate");
+        const inflationRateAnnotationX = highestInflationRateX + 20;
+        const inflationRateAnnotationY = highestInflationRateY - inflationRateCircleRadius;
+        inflationAnnotationGroup.append("text")
+          .attr("x", inflationRateAnnotationX)
+          .attr("y", inflationRateAnnotationY)
+          .attr("font-size", "12px")
+          .attr("fill", "black")
+          .text("Highest Inflation Rate");
 
-          const inflationRateArrowX = highestInflationRateX + 20;
-          const inflationRateArrowY = highestInflationRateY - inflationRateCircleRadius;
-
-          inflationAnnotationGroup.append("path")
-            .attr("d", `M${inflationRateArrowX},${inflationRateArrowY} L${inflationRateArrowX - 15},${inflationRateArrowY - 15} L${inflationRateArrowX + 15},${inflationRateArrowY - 15} Z`)
-            .attr("fill", "green");
+        const inflationRateArrowX = highestInflationRateX + 20;
+        const inflationRateArrowY = highestInflationRateY - inflationRateCircleRadius;
+        inflationAnnotationGroup.append("path")
+          .attr("d", `M${inflationRateArrowX},${inflationRateArrowY} L${inflationRateArrowX + 10},${inflationRateArrowY - 20} L${inflationRateArrowX - 10},${inflationRateArrowY - 20} Z`)
+          .attr("fill", "green");
 
 
 
