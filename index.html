@@ -15,7 +15,7 @@
     <label for="year-select">Select Year:</label>
     <select id="year-select"></select>
   </div>
-  
+
   <div id="chart-container"></div>
 
   <div>
@@ -134,6 +134,19 @@
             .style("visibility", "hidden");
 
             d3.select("#narrative-container-scene1").html("").text(narrativeExplanation);
+
+          //annotation
+          const annotationGroup = svg.append("g").attr("class", "annotations");
+          const blueDataPoint = filteredData.find(d => d.incomeLevel === 'High income');
+          const annotationX = xScale(+blueDataPoint['Real interest rate (%)']) + 10;
+          const annotationY = yScale(+blueDataPoint['Inflation, consumer prices (annual %)']) - 10;
+
+          annotationGroup.append("text")
+            .attr("x", annotationX)
+            .attr("y", annotationY)
+            .attr("font-size", "12px")
+            .attr("fill", "black")
+            .text("Higher income nations generally have lower inflation and interest rate");
 
           //show country label
           circles.on("mouseover", function (event, d) {
