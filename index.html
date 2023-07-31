@@ -360,9 +360,9 @@
 
         const interestRateCircleRadius = 6;
         annotationGroup.append("circle")
-          .attr("cx", highestInterestRateX)
-          .attr("cy", highestInterestRateY)
-          .attr("r", interestRateCircleRadius)
+          .attr("cx", interestRateArrowX)
+          .attr("cy", interestRateArrowY)
+          .attr("r", 10)
           .attr("fill", "blue");
 
         const interestRateAnnotationX = highestInterestRateX + 20;
@@ -377,9 +377,8 @@
         const interestRateArrowX = highestInterestRateX + 20;
         const interestRateArrowY = highestInterestRateY - interestRateCircleRadius;
         annotationGroup.append("path")
-          .attr("d", `M${interestRateArrowX},${interestRateArrowY} A${interestRateCircleRadius + 5},${interestRateCircleRadius + 5} 0 0,1 ${interestRateArrowX + 5},${interestRateArrowY - 10}`)
-          .attr("fill", "none")
-          .attr("stroke", "blue");
+          .attr("d", `M${interestRateArrowX},${interestRateArrowY} L${interestRateArrowX - 15},${interestRateArrowY - 15} L${interestRateArrowX + 15},${interestRateArrowY - 15} Z`)
+          .attr("fill", "blue");
 
         const inflationAnnotationGroup = inflationRateSvg.append("g").attr("class", "annotations");
 
@@ -392,9 +391,9 @@
 
         const inflationRateCircleRadius = 6;
         inflationAnnotationGroup.append("circle")
-          .attr("cx", highestInflationRateX)
-          .attr("cy", highestInflationRateY)
-          .attr("r", inflationRateCircleRadius)
+          .attr("cx", inflationRateArrowX)
+          .attr("cy", inflationRateArrowY)
+          .attr("r", 10)
           .attr("fill", "green");
 
         const inflationRateAnnotationX = highestInflationRateX + 20;
@@ -409,9 +408,8 @@
         const inflationRateArrowX = highestInflationRateX + 20;
         const inflationRateArrowY = highestInflationRateY - inflationRateCircleRadius;
         inflationAnnotationGroup.append("path")
-          .attr("d", `M${inflationRateArrowX},${inflationRateArrowY} A${inflationRateCircleRadius + 5},${inflationRateCircleRadius + 5} 0 0,1 ${inflationRateArrowX + 5},${inflationRateArrowY - 10}`)
-          .attr("fill", "none")
-          .attr("stroke", "green");
+          .attr("d", `M${inflationRateArrowX},${inflationRateArrowY} L${inflationRateArrowX - 15},${inflationRateArrowY - 15} L${inflationRateArrowX + 15},${inflationRateArrowY - 15} Z`)
+          .attr("fill", "green");
 
 
         interestRateSvg.append("path")
