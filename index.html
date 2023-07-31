@@ -17,7 +17,6 @@
   </div>
 
   <div id="chart-container"></div>
-
   <div>
     <button id="previous-button" style="display: none;">Previous</button>
     <button id="next-button">Next</button>
@@ -46,7 +45,6 @@
       const defaultYear = "2010";
 
       d3.select("#year-select").property("value", defaultYear);
-
       updateGraph(defaultYear);
 
       d3.select("#year-select").on("change", function() {
@@ -108,7 +106,6 @@
           const yScale = d3.scaleLinear()
             .domain(d3.extent(filteredData, d => +d['Inflation, consumer prices (annual %)']))
             .range([height, 0]);
-
           const colorScale = d3.scaleOrdinal()
             .domain(['High income', 'Upper middle income', 'Lower middle income', 'Low income'])
             .range(['blue', 'green', 'orange', 'red']);
@@ -181,7 +178,6 @@
               .style("visibility", "visible");
           });
 
-          // Hide country label
           circles.on("mouseout", function (event, d) {
             d3.select(this).attr("r", 5);
             labels.filter(labelData => labelData === d)
@@ -220,7 +216,7 @@
 
             It can be observed that High Income countries such as the United States have relatively low Interest and Inflation rate thorughout the years.
 
-            However, Low income countries such as Kenya have relatively high Interst rate and Inflation rate thorughout the years.
+            However, Low income countries such as Uganda have relatively high Interst rate and Inflation rate thorughout the years.
 
             
             Hover over the data points to view the Interest rate in the second scene and Inflation rate in the third scene.
@@ -438,7 +434,6 @@
 
         inflationRateSvg.append("g")
           .call(d3.axisLeft(yScale));
-
         interestRateSvg.append("text")
           .attr("x", width / 2)
           .attr("y", -10)
