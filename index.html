@@ -8,7 +8,7 @@
   <script src="https://d3js.org/d3.v7.min.js"></script>
 </head>
 <body>
-  <div id="chart-container"></div>
+  <div id="narrative-container" style="white-space: pre-wrap;"></div> <!-- Add a new container for the narrative in scene 2 -->
   <div id="narrative-container-scene2" style="white-space: pre-wrap;"></div> <!-- Add a new container for the narrative in scene 2 -->
 
   <div>
@@ -131,9 +131,8 @@
             .attr("fill", "black")
             .style("visibility", "hidden");
 
-            d3.select("#chart-container")
-              .insert("p", ":first-child")
-              .text(narrativeExplanation);
+            d3.select("#narrative-container").html("").text(narrativeExplanation2);
+
 
           //show country label
           circles.on("mouseover", function (event, d) {
