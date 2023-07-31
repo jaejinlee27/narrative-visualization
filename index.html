@@ -81,6 +81,7 @@
             Hover over the data points to view the country names.
           `;
           const narrativeContainer = d3.select("#narrative-container");
+          narrativeContainer.html(""); 
           narrativeContainer.text(narrativeExplanation);
 
           const margin = { top: 50, right: 50, bottom: 70, left: 70 };
