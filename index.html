@@ -156,14 +156,14 @@
                 .attr("stroke", "black")
                 .attr("stroke-width", 1);
 
-              const arrowheadRadius = 8; // Radius of the circle
+              const arrowheadRadius = 7; 
               annotationGroup.append("circle")
                 .attr("cx", arrowEndX)
                 .attr("cy", arrowEndY)
                 .attr("r", arrowheadRadius)
-                .attr("fill", "black");
+                .attr("fill", "white");
 
-              const textX = arrowEndX + 15; // Move the text a bit to the right of the circle
+              const textX = arrowEndX + 15;
               const textY = arrowEndY - arrowheadRadius;
 
               annotationGroup.append("text")
@@ -346,6 +346,60 @@
         const xAxis = d3.axisBottom(xScale)
           .tickValues(xScale.domain().filter((d, i) => i % 5 === 0))
           .tickFormat(d3.format("d"));
+
+
+        //annotation
+        const annotationGroup = interestRateSvg.append("g").attr("class", "annotations");
+
+        const highestInterestRateData = filteredData.reduce((acc, curr) => {
+          return (acc['Real interest rate (%)'] > curr['Real interest rate (%)']) ? acc : curr;
+        });
+
+        const highestInterestRateX = xScale(highestInterestRateData.year) + xScale.bandwidth() / 2;
+        const highestInterestRateY = yScale(+highestInterestRateData['Real interest rate (%)']);
+
+        const interestRateCircleRadius = 6;
+        annotationGroup.append("circle")
+          .attr("cx", highestInterestRateX)
+          .attr("cy", highestInterestRateY)
+          .attr("r", interestRateCircleRadius)
+          .attr("fill", "blue");
+
+        const interestRateAnnotationX = highestInterestRateX + 20;
+        const interestRateAnnotationY = highestInterestRateY - interestRateCircleRadius;
+        annotationGroup.append("text")
+          .attr("x", interestRateAnnotationX)
+          .attr("y", interestRateAnnotationY)
+          .attr("font-size", "12px")
+          .attr("fill", "black")
+          .text("Highest Interest Rate");
+
+
+        const inflationAnnotationGroup = inflationRateSvg.append("g").attr("class", "annotations");
+
+        const highestInflationRateData = filteredData.reduce((acc, curr) => {
+          return (acc['Inflation, consumer prices (annual %)'] > curr['Inflation, consumer prices (annual %)']) ? acc : curr;
+        });
+
+        const highestInflationRateX = xScale(highestInflationRateData.year) + xScale.bandwidth() / 2;
+        const highestInflationRateY = yScale(+highestInflationRateData['Inflation, consumer prices (annual %)']);
+
+        const inflationRateCircleRadius = 6;
+        inflationAnnotationGroup.append("circle")
+          .attr("cx", highestInflationRateX)
+          .attr("cy", highestInflationRateY)
+          .attr("r", inflationRateCircleRadius)
+          .attr("fill", "green");
+
+        const inflationRateAnnotationX = highestInflationRateX + 20;
+        const inflationRateAnnotationY = highestInflationRateY - inflationRateCircleRadius;
+        inflationAnnotationGroup.append("text")
+          .attr("x", inflationRateAnnotationX)
+          .attr("y", inflationRateAnnotationY)
+          .attr("font-size", "12px")
+          .attr("fill", "black")
+          .text("Highest Inflation Rate");
+
 
         interestRateSvg.append("path")
           .datum(interestRates)
