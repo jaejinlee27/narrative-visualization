@@ -216,7 +216,7 @@
           const countries = Array.from(new Set(filteredData.map(d => d.country)));
           const countrySelect = d3.select("#country-select");
           const narrativeExplanation2 = `
-            The second and third scene explores the graphic history of Interest rate and Inflation rate of each countries.
+            The Second and Third scene explores the graphic history of Interest rate and Inflation rate of each countries.
 
             It can be observed that High Income countries such as the United States have relatively low Interest and Inflation rate thorughout the years.
 
@@ -374,6 +374,12 @@
           .attr("fill", "black")
           .text("Highest Interest Rate");
 
+        const interestRateArrowX = highestInterestRateX + 20;
+        const interestRateArrowY = highestInterestRateY - interestRateCircleRadius;
+        annotationGroup.append("path")
+          .attr("d", `M${interestRateArrowX},${interestRateArrowY} A${interestRateCircleRadius + 5},${interestRateCircleRadius + 5} 0 0,1 ${interestRateArrowX + 5},${interestRateArrowY - 10}`)
+          .attr("fill", "none")
+          .attr("stroke", "blue");
 
         const inflationAnnotationGroup = inflationRateSvg.append("g").attr("class", "annotations");
 
@@ -399,6 +405,13 @@
           .attr("font-size", "12px")
           .attr("fill", "black")
           .text("Highest Inflation Rate");
+        
+        const inflationRateArrowX = highestInflationRateX + 20;
+        const inflationRateArrowY = highestInflationRateY - inflationRateCircleRadius;
+        inflationAnnotationGroup.append("path")
+          .attr("d", `M${inflationRateArrowX},${inflationRateArrowY} A${inflationRateCircleRadius + 5},${inflationRateCircleRadius + 5} 0 0,1 ${inflationRateArrowX + 5},${inflationRateArrowY - 10}`)
+          .attr("fill", "none")
+          .attr("stroke", "green");
 
 
         interestRateSvg.append("path")
