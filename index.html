@@ -377,7 +377,7 @@
         const interestRateArrowY = highestInterestRateY - interestRateCircleRadius;
         interestRateAnnotationGroup.append("path")
           .attr("d", `M${interestRateArrowX},${interestRateArrowY} L${interestRateArrowX + 10},${interestRateArrowY - 20} L${interestRateArrowX - 10},${interestRateArrowY - 20} Z`)
-          .attr("fill", "blue");
+          .attr("fill", "black");
 
         // Inflation Rate Annotations
         const inflationAnnotationGroup = inflationRateSvg.append("g").attr("class", "annotations");
@@ -408,14 +408,14 @@
         const inflationRateArrowY = highestInflationRateY - inflationRateCircleRadius;
         inflationAnnotationGroup.append("path")
           .attr("d", `M${inflationRateArrowX},${inflationRateArrowY} L${inflationRateArrowX + 10},${inflationRateArrowY - 20} L${inflationRateArrowX - 10},${inflationRateArrowY - 20} Z`)
-          .attr("fill", "green");
+          .attr("fill", "black");
 
 
 
         interestRateSvg.append("path")
           .datum(interestRates)
           .attr("fill", "none")
-          .attr("stroke", "steelblue")
+          .attr("stroke", "blue")
           .attr("stroke-width", 2)
           .attr("d", interestRateLine);
 
@@ -464,14 +464,14 @@
           .attr("text-anchor", "middle")
           .text("Inflation Rate vs. Year");
 
-          interestRateSvg.selectAll("circle")
+        interestRateSvg.selectAll("circle")
         .data(interestRates)
         .enter()
         .append("circle")
         .attr("cx", (d, i) => xScale(years[i]) + xScale.bandwidth() / 2)
         .attr("cy", d => yScale(d))
-        .attr("r", 5)
-        .attr("fill", "steelblue")
+        .attr("r", 3)
+        .attr("fill", "blue")
         .on("mouseover", (event, d, i) => {
           tooltip.transition()
             .duration(200)
@@ -492,7 +492,7 @@
         .append("circle")
         .attr("cx", (d, i) => xScale(years[i]) + xScale.bandwidth() / 2)
         .attr("cy", d => yScale(d))
-        .attr("r", 5)
+        .attr("r", 3)
         .attr("fill", "green")
         .on("mouseover", (event, d, i) => {
           tooltip.transition()
