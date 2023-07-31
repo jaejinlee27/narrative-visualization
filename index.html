@@ -365,19 +365,20 @@
           .attr("fill", "blue");
 
         const interestRateAnnotationX = highestInterestRateX + 20;
-        const interestRateAnnotationY = highestInterestRateY - interestRateCircleRadius;
+        const interestRateAnnotationY = highestInterestRateY - interestRateCircleRadius - 10;
         interestRateAnnotationGroup.append("text")
           .attr("x", interestRateAnnotationX)
           .attr("y", interestRateAnnotationY)
           .attr("font-size", "12px")
           .attr("fill", "black")
+          .attr("font-weight", "bold") // Added font-weight to make the text bold
           .text("Highest Interest Rate");
 
         const interestRateArrowX = highestInterestRateX + 20;
-        const interestRateArrowY = highestInterestRateY - interestRateCircleRadius;
+        const interestRateArrowY = highestInterestRateY - interestRateCircleRadius - 10;
         interestRateAnnotationGroup.append("path")
           .attr("d", `M${interestRateArrowX},${interestRateArrowY} L${interestRateArrowX + 10},${interestRateArrowY - 20} L${interestRateArrowX - 10},${interestRateArrowY - 20} Z`)
-          .attr("fill", "black");
+          .attr("fill", "blue");
 
         // Inflation Rate Annotations
         const inflationAnnotationGroup = inflationRateSvg.append("g").attr("class", "annotations");
@@ -396,20 +397,20 @@
           .attr("fill", "green");
 
         const inflationRateAnnotationX = highestInflationRateX + 20;
-        const inflationRateAnnotationY = highestInflationRateY - inflationRateCircleRadius;
+        const inflationRateAnnotationY = highestInflationRateY - inflationRateCircleRadius - 10;
         inflationAnnotationGroup.append("text")
           .attr("x", inflationRateAnnotationX)
           .attr("y", inflationRateAnnotationY)
           .attr("font-size", "12px")
           .attr("fill", "black")
+          .attr("font-weight", "bold") 
           .text("Highest Inflation Rate");
 
-        const inflationRateArrowX = highestInflationRateX + 20;
-        const inflationRateArrowY = highestInflationRateY - inflationRateCircleRadius;
-        inflationAnnotationGroup.append("path")
-          .attr("d", `M${inflationRateArrowX},${inflationRateArrowY} L${inflationRateArrowX + 10},${inflationRateArrowY - 20} L${inflationRateArrowX - 10},${inflationRateArrowY - 20} Z`)
-          .attr("fill", "black");
-
+  const inflationRateArrowX = highestInflationRateX + 20;
+  const inflationRateArrowY = highestInflationRateY - inflationRateCircleRadius - 10;
+  inflationAnnotationGroup.append("path")
+    .attr("d", `M${inflationRateArrowX},${inflationRateArrowY} L${inflationRateArrowX + 10},${inflationRateArrowY - 20} L${inflationRateArrowX - 10},${inflationRateArrowY - 20} Z`)
+    .attr("fill", "green");
 
 
         interestRateSvg.append("path")
