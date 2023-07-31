@@ -135,18 +135,58 @@
 
             d3.select("#narrative-container-scene1").html("").text(narrativeExplanation);
 
+            
           //annotation
           const annotationGroup = svg.append("g").attr("class", "annotations");
+
           const blueDataPoint = filteredData.find(d => d.incomeLevel === 'High income');
-          const annotationX = xScale(+blueDataPoint['Real interest rate (%)']) + 10;
-          const annotationY = yScale(+blueDataPoint['Inflation, consumer prices (annual %)']) - 10;
+          const dataX = +blueDataPoint['Real interest rate (%)'];
+          const dataY = +blueDataPoint['Inflation, consumer prices (annual %)'];
+
+          const arrowStartX = xScale(dataX);
+          const arrowStartY = yScale(dataY);
+          const arrowEndX = arrowStartX + 100; // Lengthen the arrow line
+          const arrowEndY = arrowStartY - 100; // Move the arrow line up
+
+          annotationGroup.append("line")
+            .attr("x1", arrowStartX)
+            .attr("y1", arrowStartY)
+            .attr("x2", arrowEndX)
+            .attr("y2", arrowEndY)
+            .attr("stroke", "black")
+            .attr("stroke-width", 1);
+
+          svg.append("marker")
+            .attr("id", "arrowhead")
+            .attr("refX", 6) // X coordinate of the arrowhead tip
+            .attr("refY", 6) // Y coordinate of the arrowhead tip
+            .attr("markerWidth", 12)
+            .attr("markerHeight", 12)
+            .attr("orient", "auto")
+            .append("path")
+            .attr("d", "M2,2 L10,6 L2,10 L6,6 L2,2")
+            .style("fill", "black");
+
+          annotationGroup.append("line")
+            .attr("x1", arrowStartX)
+            .attr("y1", arrowStartY)
+            .attr("x2", arrowEndX)
+            .attr("y2", arrowEndY)
+            .attr("stroke", "black")
+            .attr("stroke-width", 1)
+            .attr("marker-end", "url(#arrowhead)");
+
+          const textX = arrowEndX + 10;
+          const textY = arrowEndY - 10;
 
           annotationGroup.append("text")
-            .attr("x", annotationX)
-            .attr("y", annotationY)
+            .attr("x", textX)
+            .attr("y", textY)
             .attr("font-size", "12px")
             .attr("fill", "black")
             .text("Higher income nations generally have lower inflation and interest rate");
+
+
 
           //show country label
           circles.on("mouseover", function (event, d) {
