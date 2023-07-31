@@ -131,7 +131,9 @@
             .attr("fill", "black")
             .style("visibility", "hidden");
 
-            d3.select("#narrative-container").html("").text(narrativeExplanation);
+            d3.select("#chart-container")
+              .insert("p", ":first-child")
+              .text(narrativeExplanation);
 
           //show country label
           circles.on("mouseover", function (event, d) {
