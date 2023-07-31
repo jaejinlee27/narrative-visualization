@@ -357,7 +357,7 @@
           .attr("cx", highestInterestRateX)
           .attr("cy", highestInterestRateY)
           .attr("r", interestRateCircleRadius)
-          .attr("fill", "blue");
+          .attr("fill", "purple");
 
         const interestRateAnnotationX = highestInterestRateX + 20;
         const interestRateAnnotationY = highestInterestRateY - interestRateCircleRadius - 10; // Adjusted Y position
@@ -382,7 +382,7 @@
           .attr("cx", highestInflationRateX)
           .attr("cy", highestInflationRateY)
           .attr("r", inflationRateCircleRadius)
-          .attr("fill", "green");
+          .attr("fill", "purple");
 
         const inflationRateAnnotationX = highestInflationRateX + 20;
         const inflationRateAnnotationY = highestInflationRateY - inflationRateCircleRadius - 10; // Adjusted Y position
@@ -397,7 +397,7 @@
         interestRateSvg.append("path")
           .datum(interestRates)
           .attr("fill", "none")
-          .attr("stroke", "blue")
+          .attr("stroke", "purple")
           .attr("stroke-width", 2)
           .attr("d", interestRateLine);
 
@@ -405,7 +405,7 @@
         inflationRateSvg.append("path")
           .datum(inflationRates)
           .attr("fill", "none")
-          .attr("stroke", "green")
+          .attr("stroke", "purple")
           .attr("stroke-width", 2)
           .attr("d", inflationRateLine);
 
@@ -453,7 +453,7 @@
           .attr("cx", (d, i) => xScale(years[i]) + xScale.bandwidth() / 2)
           .attr("cy", d => yScale(d))
           .attr("r", 5)
-          .attr("fill", "blue")
+          .attr("fill", "purple")
           .on("mouseover", (event, d, i) => {
             tooltip.transition()
               .duration(200)
@@ -475,7 +475,7 @@
           .attr("cx", (d, i) => xScale(years[i]) + xScale.bandwidth() / 2)
           .attr("cy", d => yScale(d))
           .attr("r", 5)
-          .attr("fill", "green")
+          .attr("fill", "purple")
           .on("mouseover", (event, d, i) => {
             tooltip.transition()
               .duration(200)
