@@ -8,11 +8,13 @@
   <script src="https://d3js.org/d3.v7.min.js"></script>
 </head>
 <body>
+  <div id="chart-container"></div>
+  <div id="narrative-container-scene2" style="white-space: pre-wrap;"></div> <!-- Add a new container for the narrative in scene 2 -->
+
   <div>
     <label for="year-select">Select Year:</label>
     <select id="year-select"></select>
   </div>
-  <div id="chart-container"></div>
 
   <div>
     <button id="previous-button" style="display: none;">Previous</button>
@@ -73,7 +75,7 @@
             real interest rates and inflation rates across different countries. 
             The graph displays the real interest rate on the X-axis and the inflation 
             rate on the Y-axis for the selected year (${selectedYear}).
-            \n
+            
             Blue dots indicate High income nations, green indicates Upper middle income, 
             yellow indicate Lower middle income, and red indicate Low income nations.
             
@@ -129,9 +131,7 @@
             .attr("fill", "black")
             .style("visibility", "hidden");
 
-            d3.select("#chart-container")
-              .insert("p", ":first-child")
-              .text(narrativeExplanation);
+            d3.select("#narrative-container").html("").text(narrativeExplanation);
 
           //show country label
           circles.on("mouseover", function (event, d) {
@@ -186,9 +186,7 @@
 
           countrySelect.selectAll("option").remove();
 
-          d3.select("#chart-container")
-              .insert("p", ":first-child")
-              .text(narrativeExplanation2);
+          d3.select("#narrative-container-scene2").html("").text(narrativeExplanation2);
 
           //options for the country dropdown
           const countryOptions = countrySelect
