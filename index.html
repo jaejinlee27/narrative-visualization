@@ -356,7 +356,7 @@
         const highestInterestRateX = xScale(highestInterestRateData.year) + xScale.bandwidth() / 2;
         const highestInterestRateY = yScale(+highestInterestRateData['Real interest rate (%)']);
 
-        const interestRateCircleRadius = 6;
+        const interestRateCircleRadius = 5;
         interestRateAnnotationGroup.append("circle")
           .attr("cx", highestInterestRateX)
           .attr("cy", highestInterestRateY)
@@ -381,7 +381,7 @@
         const highestInflationRateX = xScale(highestInflationRateData.year) + xScale.bandwidth() / 2;
         const highestInflationRateY = yScale(+highestInflationRateData['Inflation, consumer prices (annual %)']);
 
-        const inflationRateCircleRadius = 6;
+        const inflationRateCircleRadius = 5;
         inflationAnnotationGroup.append("circle")
           .attr("cx", highestInflationRateX)
           .attr("cy", highestInflationRateY)
@@ -457,7 +457,7 @@
           .append("circle")
           .attr("cx", (d, i) => xScale(years[i]) + xScale.bandwidth() / 2)
           .attr("cy", d => yScale(d))
-          .attr("r", 3) // Keep the circle size the same for all points
+          .attr("r", 5)
           .attr("fill", "blue")
           .on("mouseover", (event, d, i) => {
             tooltip.transition()
@@ -479,7 +479,7 @@
           .append("circle")
           .attr("cx", (d, i) => xScale(years[i]) + xScale.bandwidth() / 2)
           .attr("cy", d => yScale(d))
-          .attr("r", 3) // Keep the circle size the same for all points
+          .attr("r", 5)
           .attr("fill", "green")
           .on("mouseover", (event, d, i) => {
             tooltip.transition()
